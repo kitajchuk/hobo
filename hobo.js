@@ -37,27 +37,52 @@
 
 
     mapDataset = function ( node ) {
-        node[ this._hoboId ] = {};
+        if ( !node.hoboData ) {
+            node.hoboData = {};
+        }
 
         for ( var i in node.dataset ) {
-            node[ this._hoboId ][ i ] = node.dataset[ i ];
+            node.hoboData[ i ] = node.dataset[ i ];
         }
     },
 
 
     storeData = function ( data, node ) {
         for ( var i in data ) {
-            node[ this._hoboId ][ i ] = data[ i ];
+            node.hoboData[ i ] = data[ i ];
         }
     },
 
 
     mergeData = function ( data, node ) {
-        for ( var i in node[ this._hoboId ] ) {
+        for ( var i in node.hoboData ) {
             if ( !data[ i ] ) {
-                data[ i ] = node[ this._hoboId ][ i ];
+                data[ i ] = node.hoboData[ i ];
             }
         }
+    },
+
+
+    serializeData = function ( data, prefix ) {
+        var str = [],
+            key,
+            val;
+
+        for ( var i in data ) {
+            if ( data.hasOwnProperty( i ) ) {
+                key = prefix ? (prefix + "[" + i + "]") : i;
+                val = data[ i ];
+
+                if ( typeof val === "object" ) {
+                    str.push( serializeData( val, key ) );
+
+                } else {
+                    str.push( (encodeURIComponent( key ) + "=" + encodeURIComponent( val )) );
+                }
+            }
+        }
+
+        return str.join( "&" );
     },
 
 
@@ -120,9 +145,9 @@
                     return;
                 }
 
-                for ( var i in node[ this._hoboId ] ) {
+                for ( var i in node.hoboData ) {
                     if ( i === key ) {
-                        obj = node[ this._hoboId ][ i ];
+                        obj = node.hoboData[ i ];
                         break;
                     }
                 }
@@ -188,13 +213,51 @@
     };
 
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
     hobo.ajax = function ( config ) {
-        
+        // dataType can be `html` or `json`
+
+        var xhr = new XMLHttpRequest(),
+            url = config.url || window.location.href,
+            data = serializeData( config.data || {} ),
+            dataType = config.dataType || "html",
+            method = (config.method || "get").toUpperCase(),
+            resData = null;
+
+        return hobo.promise(function ( resolve, reject ) {
+            xhr.open( method, (url + (data ? "?" + data : "")), true );
+
+            xhr.onreadystatechange = function ( e ) {
+                if ( this.readyState === 4 ) {
+                    // Two-Hundo's are A-Okay with Hobo
+                    if ( /^20/.test( this.status ) ) {
+                        resData = this.responseText;
+
+                        if ( dataType === "json" ) {
+                            try {
+                                resData = JSON.parse( resData );
+
+                            } catch ( error ) {
+                                reject( ("Rejecting on JSON.parse error : " + error) );
+                            }
+                        }
+
+                        resolve( resData );
+
+                    } else {
+                        reject( ("Rejecting on server status code : " + this.status) );
+                    }
+                }
+            };
+
+            xhr.send();
+        });
     };
 
 
-    hobo.promise = function () {
-        
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+    hobo.promise = function ( executor ) {
+        return new Promise( executor );
     };
 
 

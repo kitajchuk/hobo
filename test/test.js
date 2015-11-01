@@ -14,3 +14,16 @@ var bar = foo.find( ".bar" );
 window.hobo = hobo;
 window.elems = elems;
 window.foo = foo;
+
+
+
+hobo.ajax({
+    url: "endpoint.json",
+    dataType: "json"
+
+}).then(function ( value ) {
+    console.log( "then", value );
+
+}).catch(function ( reason ) {
+    console.log( "catch", reason );
+});
