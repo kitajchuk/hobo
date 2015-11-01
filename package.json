@@ -1,0 +1,53 @@
+{
+  "title": "hobo",
+  "name": "properjs-hobo",
+  "description": "All the things you want without all the cruft.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ProperJS/hobo",
+  "readmeFilename": "README.md",
+  "contributors": [
+    {
+      "name": "Brandon Kitajchuk",
+      "email": "kitajchuk@gmail.com",
+      "url": "http://blkpdx.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ProperJS/hobo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ProperJS/hobo/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/ProperJS/hobo/blob/master/LICENSE"
+    }
+  ],
+  "main": "hobo",
+  "scripts": {
+    "test": "webpack test/test.js test/dist/common.js ; cp hobo.js test/dist/browser.js",
+    "watch": "chokidar hobo.js --initial -d 10 -c 'npm run test'"
+  },
+  "dependencies": {
+    "es6-promise": "~3.0",
+    "paramalama": "~0.2",
+    "properjs-matchelement": "~0.2"
+  },
+  "keywords": [
+    "properjs",
+    "event",
+    "jquery",
+    "data",
+    "promise",
+    "classes",
+    "ajax",
+    "xhr",
+    "query",
+    "dom"
+  ],
+  "devDependencies": {
+    "chokidar-cli": "^1.1.1"
+  }
+}
