@@ -6,7 +6,13 @@
  * @author: kitajchuk
  *
  * @links
- * https://www.npmjs.com/package/es6-promise
+ * https://developer.mozilla.org/en-US/docs/Web/API/Node
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element
+ * https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
  * https://github.com/jakearchibald/es6-promise
  * http://www.html5rocks.com/en/tutorials/es6/promises/
  *
@@ -23,12 +29,8 @@
 
 })(function () {
 
+    var matchElement = require( "properjs-matchelement" );
     var version = "0.1.0",
-
-
-    makeArray = function ( nodes ) {
-        return [].slice.call( nodes );
-    },
 
 
     makeId = function () {
@@ -36,28 +38,33 @@
     },
 
 
+    makeArray = function ( nodes ) {
+        return [].slice.call( nodes );
+    },
+
+
     mapDataset = function ( node ) {
-        if ( !node.hoboData ) {
-            node.hoboData = {};
+        if ( !node.hoboDataMap ) {
+            node.hoboDataMap = {};
         }
 
         for ( var i in node.dataset ) {
-            node.hoboData[ i ] = node.dataset[ i ];
+            node.hoboDataMap[ i ] = node.dataset[ i ];
         }
     },
 
 
     storeData = function ( data, node ) {
         for ( var i in data ) {
-            node.hoboData[ i ] = data[ i ];
+            node.hoboDataMap[ i ] = data[ i ];
         }
     },
 
 
     mergeData = function ( data, node ) {
-        for ( var i in node.hoboData ) {
+        for ( var i in node.hoboDataMap ) {
             if ( !data[ i ] ) {
-                data[ i ] = node.hoboData[ i ];
+                data[ i ] = node.hoboDataMap[ i ];
             }
         }
     },
@@ -88,36 +95,81 @@
 
     /**
      *
-     * @constructor Hobo
+     * @private
+     * @class Hobo
+     * @classdesc All the things you want without all the cruft.
+     * @param {string} selector The parameter passed to `querySelectorAll`
+     *                          Optionally you can pass the nodelist Array too.
+     *                          This is really just for the use of hobo().find().
+     * @param {element} context The Element used to call `querySelectorAll`
      *
      */
     Hobo = function ( selector, context ) {
-        this._context = (context || document);
-        this._nodeList = makeArray( this._context.querySelectorAll( selector ) )
-        this._length = this._nodeList.length;
-        this._hoboId = makeId();
+        // Hobo instance properties
+        this._context = (context && context.nodeType && context.nodeType === 1 ? context : document);
+        this._nodeList = (Array.isArray( selector ) ? selector : makeArray( this._context.querySelectorAll( selector ) ));
+        this._selector = selector;
+
+        // Hobo initialization steps
+        // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
         this._nodeList.forEach( mapDataset.bind( this ) );
+
+        // Hobo version?
+        this._version = version;
+
+        // Hobo events store
+        this._events = {};
     },
 
 
     hobo;
 
 
-    Hobo.prototype.on = function ( event, delegate, handler ) {
-        return this;
-    };
-
-
-    Hobo.prototype.off = function ( event, handler ) {
-        return this;
-    };
-
-
+    /**
+     *
+     * @public
+     * @instance
+     * @method find
+     * @description Query into a Hobo instance for new nodes.
+     * @param {string} selector The selector to query for
+     * @returns {Hobo}
+     *
+     */
     Hobo.prototype.find = function ( selector ) {
-        return new Hobo( selector, this._context );
+        var ret = this;
+
+        // If we are `finding` within a multi-node collection...
+        // Here its probably faster to grab the nodes within each Node
+        // and then just let the context be the document for the new instance. 
+        if ( this._nodeList.length > 1 ) {
+            ret = [];
+
+            this._nodeList.forEach(function ( node ) {
+                ret = ret.concat( makeArray( node.querySelectorAll( selector ) ) );
+            });
+
+            ret = new Hobo( ret, null );
+
+        // Otherwise we can assume to use our single node as context
+        } else {
+            ret = new Hobo( selector, this._nodeList[ 0 ] );
+        }
+
+        return ret;
     };
 
 
+    /**
+     *
+     * @public
+     * @instance
+     * @method data
+     * @description Get / set data values with nodes.
+     * @param {string} key The access key
+     * @param {string} value The value to be stored
+     * @returns {mixed}
+     *
+     */
     Hobo.prototype.data = function ( key, value ) {
         // Any `non-unique` data keys resolve to the first unique occurrence
         // Exactly how jQuery handles `.data( ... )` on multi-node collections
@@ -145,9 +197,9 @@
                     return;
                 }
 
-                for ( var i in node.hoboData ) {
+                for ( var i in node.hoboDataMap ) {
                     if ( i === key ) {
-                        obj = node.hoboData[ i ];
+                        obj = node.hoboDataMap[ i ];
                         break;
                     }
                 }
@@ -170,6 +222,15 @@
     };
 
 
+    /**
+     *
+     * @public
+     * @instance
+     * @method addClass
+     * @description Add one or more classNames to the nodes.
+     * @param {string} classes The space-separated classNames
+     *
+     */
     Hobo.prototype.addClass = function ( classes ) {
         this._nodeList.forEach(function ( element ) {
             var newClass = classes.split( " " ),
@@ -183,9 +244,20 @@
 
             element.className = elsClass.join( " " );
         });
+
+        return this;
     };
 
 
+    /**
+     *
+     * @public
+     * @instance
+     * @method removeClass
+     * @description Remove one or more classNames from the nodes.
+     * @param {string} classes The space-separated classNames
+     *
+     */
     Hobo.prototype.removeClass = function ( classes ) {
         this._nodeList.forEach(function ( element ) {
             var oldClass = classes.split( " " ),
@@ -199,13 +271,106 @@
 
             element.className = elsClass.join( " " );
         });
+
+        return this;
     };
 
 
     /**
      *
+     * @public
+     * @instance
+     * @method on
+     * @description Bind a standard DOM Event. Honor delegation as a primary.
+     * @param {string} event 
+     * @param {string} selector 
+     * @param {function} callback
+     *
+     */
+    Hobo.prototype.on = function ( event, selector, callback ) {
+        // Normalize `selector` for event delegation
+        // Normalize `callback` in case no delegate selector was passed
+        if ( !callback ) {
+            callback = selector;
+            selector = this._selector;
+        }
+
+        // Normalize event handler with a small wrapper function
+        var handler = function ( e ) {
+            var ctx = matchElement( e.target, selector );
+
+            // Only apply handler if ctx is not null
+            if ( ctx ) {
+                callback.call( ctx, e );
+            }
+        };
+
+        // Each handler gets a unique ID ref
+        handler.hoboId = makeId();
+
+        // Each handler/callback pair gets stored in an `events` index
+        this._events[ handler.hoboId ] = {
+            type: event,
+            handler: handler,
+            callback: callback
+        };
+
+        this._context.addEventListener( event, handler, false );
+
+        return this;
+    };
+
+
+    /**
+     *
+     * @public
+     * @instance
+     * @method off
+     * @description Un-Bind a standard DOM Event.
+     * @param {string} event 
+     * @param {function} callback
+     *
+     */
+    Hobo.prototype.off = function ( event, callback ) {
+        var id;
+
+        // Remove a single handler
+        if ( callback ) {
+            for ( id in this._events ) {
+                // Make sure we stick to the event type
+                if ( this._events[ id ].type === event ) {
+                    // Make sure the external callbacks match AND the handlers hoboId matches
+                    if ( this._events[ id ].callback === callback && this._events[ id ].handler.hoboId === id ) {
+                        this._context.removeEventListener( event, this._events[ id ].handler, false );
+
+                        delete this._events[ id ];
+                    }
+                }
+            }
+
+        // Remove all event handlers 
+        } else {
+            for ( id in this._events ) {
+                // Make sure we stick to the event type
+                if ( this._events[ id ].type === event ) {
+                    this._context.removeEventListener( event, this._events[ id ].handler, false );
+
+                    delete this._events[ id ];
+                }
+            }
+        }
+
+        return this;
+    };
+
+
+    /**
+     *
+     * @public
      * @method hobo
-     * @description Wrapper for Hobo instances. Avoids `new Hobo( ... )` in your code
+     * @description Wrapper for `Hobo` instances.
+     * @param {string} selector The parameter passed to `querySelectorAll`
+     * @param {element} context The Element used to call `querySelectorAll`
      *
      */
     hobo = function ( selector, context ) {
@@ -213,7 +378,19 @@
     };
 
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+    /**
+     *
+     * @public
+     * @method ajax
+     * @description Perform standar XHR with a native Promise.
+     * @param {object} config The jQuery-like ajax config object
+     *                        url       =>   string
+     *                        data      =>   object
+     *                        dataType  =>   string
+     *                        method    =>   string
+     * @returns {Promise}
+     *
+     */
     hobo.ajax = function ( config ) {
         // dataType can be `html` or `json`
 
@@ -255,7 +432,15 @@
     };
 
 
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+    /**
+     *
+     * @public
+     * @method promise
+     * @description Wrapper method returns a native Promise.
+     * @param {function} executor The function passed to the Promise constructor
+     * @returns {Promise}
+     *
+     */
     hobo.promise = function ( executor ) {
         return new Promise( executor );
     };

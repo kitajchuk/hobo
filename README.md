@@ -18,33 +18,57 @@ var hobo = require( "properjs-hobo" );
 
 // Hobo gives you a chainable method wrapper
 hobo( ".js-element" )
+    // Events
     .on( "click", ( e ) => {
-        // Events
+        // Handle stuff
     })
-    .data( "foo", "bar" )
-    .addClass( "is-active" );
+    .on( "click", ".js-delegate-selector", ( e ) => {
+        // Handle stuff
+    })
+    .off( "click", handlerFunction )
 
-// Hobo lets you pass an {object} to data
-hobo( ".js-element" ).data({
-    foo: "bar",
-    baz: "bot"
-});
+    // Data
+    .data()
+    .data( "key" )
+    .data( "key", "value" )
+    .data({
+        key: "value",
+        and: [1, 2, 3]
+    })
 
-// Hobo, like jQuery, lets you access data as well
-var foo = hobo( ".js-element" ).data( "foo" );
+    // ClassNames
+    .addClass( "new-class" )
+    .removeClass( "old-class" )
 
-// All your datas are belong to Hobo
-var datas = hobo( ".js-element" ).data();
+    // Querying
+    .find( ".js-child-elements" );
 
-// Hobo gives you utility methods for XHR and Promise
-// Hobo loves promises, so the ajax method returns one
+// Hobo gives you utility methods for XHR and Promise.
+// Hobo loves promises, so the ajax method returns one.
 hobo.ajax({
-    url,
-    data,
-    dataType,
-    method,
-    
+    // String url
+    url: "/some/endpoint",
+
+    // Object hash to pass to endpoint
+    data: {},
+
+    // This can be "html" or "json"
+    dataType: "json",
+
+    // The request method type, "POST" etc...
+    method: "GET"
+
+}).then(function ( value ) {
+    // Success with response
+
+}).catch(function ( reason ) {
+    // Failure with reason Error
 })
+
+
+hobo.promise(function ( resolve, reject ) {
+    // Handle promise here
+});
 ```
 
 
@@ -61,25 +85,27 @@ hobo.ajax({
 
 ## Hobo Utility Methods
 - ajax()
-- promise()?
+- promise()
 
 
 
-## jQuery "Privilege" Methods
+## Hobo Consideration Methods
+These are methods that can prove to be extremely useful when using jQuery, so there are considerations to supporting some of them within Hobo.
+
 - eq()
+- map()
 - index()
 - parent()
-- closest()
-- map()
 - filter()
-- toggleClass()
 - append()
 - remove()
 - detach()
+- trigger()
 - prepend()
-- prependTo()
+- closest()
 - appendTo()
 - children()
+- prependTo()
+- toggleClass()
 - insertAfter()
 - insertBefore()
-- trigger()

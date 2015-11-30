@@ -31,9 +31,7 @@
     "watch": "chokidar hobo.js --initial -d 10 -c 'npm run test'"
   },
   "dependencies": {
-    "es6-promise": "~3.0",
-    "paramalama": "~0.2",
-    "properjs-matchelement": "~0.2"
+    "properjs-matchelement": "^0.2.0"
   },
   "keywords": [
     "properjs",

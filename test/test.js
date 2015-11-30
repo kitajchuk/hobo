@@ -1,19 +1,29 @@
-var hobo = require( "../hobo" );
-var elems = hobo( ".js-element" );
-var foo = hobo( "#foo", document.body );
-var bar = foo.find( ".bar" );
+window.hobo = require( "../hobo" );
 
 
 
-//console.log( elems );
-//console.log( foo );
-//console.log( bar );
+window.els = hobo( ".js-element", document.body );
+window.foo = hobo( "#foo" );
+window.bar = foo.find( ".bar" );
+window.bars = els.find( ".bar" );
+window.fooHandler = function ( e ) {
+    console.log( "foo", e );
+};
+window.barHandler = function ( e ) {
+    console.log( "bar", e );
+};
 
 
 
-window.hobo = hobo;
-window.elems = elems;
-window.foo = foo;
+console.log( "els", els );
+console.log( "foo", foo );
+console.log( "bar", bar );
+console.log( "bars", bars );
+
+
+
+window.foo.on( "click", window.fooHandler );
+window.foo.on( "click", ".bar", window.barHandler );
 
 
 
