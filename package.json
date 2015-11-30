@@ -28,7 +28,9 @@
   "main": "hobo",
   "scripts": {
     "test": "webpack test/test.js test/dist/common.js ; cp hobo.js test/dist/browser.js",
-    "watch": "chokidar hobo.js --initial -d 10 -c 'npm run test'"
+    "watch": "chokidar hobo.js --initial -d 10 -c 'npm run test'",
+    "build": "webpack hobo.js dist/hobo.js",
+    "postbuild": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js"
   },
   "dependencies": {
     "properjs-matchelement": "^0.2.0"
@@ -46,6 +48,7 @@
     "dom"
   ],
   "devDependencies": {
-    "chokidar-cli": "^1.1.1"
+    "chokidar-cli": "^1.1.1",
+    "uglifyjs": "^2.4.10"
   }
 }
