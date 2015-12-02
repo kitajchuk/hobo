@@ -28,7 +28,7 @@
 
 })(function () {
 
-    var Hobo = require( "./lib/Hobo" ),
+    var HoboExtended = require( "./lib/HoboExtended" ),
         utils = require( "./lib/utils" ),
         ajax = require( "./lib/ajax" ),
         promise = require( "./lib/promise" ),
@@ -44,7 +44,7 @@
          *
          */
         hobo = function ( selector, context ) {
-            return new Hobo( selector, context );
+            return new HoboExtended( selector, context );
         };
 
 

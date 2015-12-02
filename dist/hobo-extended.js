@@ -74,10 +74,10 @@
 
 	})(function () {
 
-	    var Hobo = __webpack_require__( 1 ),
-	        utils = __webpack_require__( 3 ),
-	        ajax = __webpack_require__( 4 ),
-	        promise = __webpack_require__( 5 ),
+	    var HoboExtended = __webpack_require__( 1 ),
+	        utils = __webpack_require__( 4 ),
+	        ajax = __webpack_require__( 5 ),
+	        promise = __webpack_require__( 6 ),
 
 
 	        /**
@@ -90,7 +90,7 @@
 	         *
 	         */
 	        hobo = function ( selector, context ) {
-	            return new Hobo( selector, context );
+	            return new HoboExtended( selector, context );
 	        };
 
 
@@ -133,14 +133,70 @@
 	/*!
 	 *
 	 * 
+	 * @HoboExtended
+	 * @author: kitajchuk
+	 *
+	 *
+	 */
+	var Hobo = __webpack_require__( 2 );
+
+
+	Hobo.prototype.eq = function ( i ) {
+	    return i < this._length 
+	            ? new Hobo(
+	                this._selector,
+	                this._context,
+	                [ this._nodeList[ i ] ]
+	            ) 
+	            : this;
+	};
+
+
+	Hobo.prototype.map = function ( fn ) {
+	    this._nodeList.forEach(function ( node ) {
+	        node = (fn() || node);
+
+	        return node;
+	    });
+
+	    return this;
+	};
+
+
+	Hobo.prototype.index = function () {
+	    return Array.prototype.indexOf.call(
+	        this._nodeList[ 0 ].parentNode.children,
+	        this._nodeList[ 0 ]
+	    );
+	};
+
+
+	Hobo.prototype.parent = function () {
+	    return new Hobo(
+	        "",
+	        null,
+	        [ this._nodeList[ 0 ].parentNode ]
+	    );
+	};
+
+
+	module.exports = Hobo;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*!
+	 *
+	 * 
 	 * @Hobo
 	 * @author: kitajchuk
 	 *
 	 *
 	 */
-	var matchElement = __webpack_require__( 2 ),
+	var matchElement = __webpack_require__( 3 ),
 
-	    utils = __webpack_require__( 3 ),
+	    utils = __webpack_require__( 4 ),
 
 
 	    /**
@@ -418,7 +474,7 @@
 	module.exports = Hobo;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -477,7 +533,7 @@
 	});
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*!
@@ -562,10 +618,10 @@
 	};
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__( 3 );
+	var utils = __webpack_require__( 4 );
 
 
 	/**
@@ -622,7 +678,7 @@
 	};
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/**

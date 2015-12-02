@@ -1,4 +1,4 @@
-window.hobo = require( "../hobo" );
+window.hobo = require( "../hobo-extended" );
 
 
 

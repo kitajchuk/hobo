@@ -27,10 +27,13 @@
   ],
   "main": "hobo",
   "scripts": {
-    "test": "webpack test/test.js test/dist/common.js ; cp hobo.js test/dist/browser.js",
-    "watch": "chokidar hobo.js --initial -d 10 -c 'npm run test'",
+    "watch": "chokidar hobo.js hobo-extended.js lib/*.js --initial -d 10 -c 'npm run tasks'",
+    "tasks": "parallelshell 'npm run test' 'npm run build' 'npm run extend'",
+    "test": "webpack test/test.js test/dist/test.js",
     "build": "webpack hobo.js dist/hobo.js",
-    "postbuild": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js"
+    "postbuild": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js",
+    "extend": "webpack hobo-extended.js dist/hobo-extended.js",
+    "postextend": "uglifyjs --compress --mangle --output dist/hobo-extended.min.js dist/hobo-extended.js"
   },
   "dependencies": {
     "properjs-matchelement": "^0.2.0"
@@ -49,6 +52,7 @@
   ],
   "devDependencies": {
     "chokidar-cli": "^1.1.1",
+    "parallelshell": "^2.0.0",
     "uglifyjs": "^2.4.10"
   }
 }

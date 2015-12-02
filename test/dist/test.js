@@ -44,6 +44,50 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	window.hobo = __webpack_require__( 1 );
+
+
+
+	window.els = hobo( ".js-element", document.body );
+	window.foo = hobo( "#foo" );
+	window.bar = foo.find( ".bar" );
+	window.bars = els.find( ".bar" );
+	window.fooHandler = function ( e ) {
+	    console.log( "foo", e );
+	};
+	window.barHandler = function ( e ) {
+	    console.log( "bar", e );
+	};
+
+
+
+	console.log( "els", els );
+	console.log( "foo", foo );
+	console.log( "bar", bar );
+	console.log( "bars", bars );
+
+
+
+	window.foo.on( "click", window.fooHandler );
+	window.foo.on( "click", ".bar", window.barHandler );
+
+
+
+	hobo.ajax({
+	    url: "endpoint.json",
+	    dataType: "json"
+
+	}).then(function ( value ) {
+	    console.log( "then", value );
+
+	}).catch(function ( reason ) {
+	    console.log( "catch", reason );
+	});
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/*!
 	 *
 	 *
@@ -74,10 +118,10 @@
 
 	})(function () {
 
-	    var Hobo = __webpack_require__( 1 ),
-	        utils = __webpack_require__( 3 ),
-	        ajax = __webpack_require__( 4 ),
-	        promise = __webpack_require__( 5 ),
+	    var HoboExtended = __webpack_require__( 2 ),
+	        utils = __webpack_require__( 5 ),
+	        ajax = __webpack_require__( 6 ),
+	        promise = __webpack_require__( 7 ),
 
 
 	        /**
@@ -90,7 +134,7 @@
 	         *
 	         */
 	        hobo = function ( selector, context ) {
-	            return new Hobo( selector, context );
+	            return new HoboExtended( selector, context );
 	        };
 
 
@@ -127,7 +171,63 @@
 	});
 
 /***/ },
-/* 1 */
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*!
+	 *
+	 * 
+	 * @HoboExtended
+	 * @author: kitajchuk
+	 *
+	 *
+	 */
+	var Hobo = __webpack_require__( 3 );
+
+
+	Hobo.prototype.eq = function ( i ) {
+	    return i < this._length 
+	            ? new Hobo(
+	                this._selector,
+	                this._context,
+	                [ this._nodeList[ i ] ]
+	            ) 
+	            : this;
+	};
+
+
+	Hobo.prototype.map = function ( fn ) {
+	    this._nodeList.forEach(function ( node ) {
+	        node = (fn() || node);
+
+	        return node;
+	    });
+
+	    return this;
+	};
+
+
+	Hobo.prototype.index = function () {
+	    return Array.prototype.indexOf.call(
+	        this._nodeList[ 0 ].parentNode.children,
+	        this._nodeList[ 0 ]
+	    );
+	};
+
+
+	Hobo.prototype.parent = function () {
+	    return new Hobo(
+	        "",
+	        null,
+	        [ this._nodeList[ 0 ].parentNode ]
+	    );
+	};
+
+
+	module.exports = Hobo;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -138,9 +238,9 @@
 	 *
 	 *
 	 */
-	var matchElement = __webpack_require__( 2 ),
+	var matchElement = __webpack_require__( 4 ),
 
-	    utils = __webpack_require__( 3 ),
+	    utils = __webpack_require__( 5 ),
 
 
 	    /**
@@ -418,7 +518,7 @@
 	module.exports = Hobo;
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -477,7 +577,7 @@
 	});
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports) {
 
 	/*!
@@ -562,10 +662,10 @@
 	};
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__( 3 );
+	var utils = __webpack_require__( 5 );
 
 
 	/**
@@ -622,7 +722,7 @@
 	};
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/**
