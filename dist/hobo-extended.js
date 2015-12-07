@@ -74,10 +74,10 @@
 
 	})(function () {
 
-	    var HoboExtended = __webpack_require__( 1 ),
+	    var HoboX = __webpack_require__( 1 ),
 	        utils = __webpack_require__( 4 ),
-	        ajax = __webpack_require__( 5 ),
-	        promise = __webpack_require__( 6 ),
+	        ajax = __webpack_require__( 9 ),
+	        promise = __webpack_require__( 10 ),
 
 
 	        /**
@@ -90,7 +90,7 @@
 	         *
 	         */
 	        hobo = function ( selector, context ) {
-	            return new HoboExtended( selector, context );
+	            return new HoboX( selector, context );
 	        };
 
 
@@ -141,43 +141,10 @@
 	var Hobo = __webpack_require__( 2 );
 
 
-	Hobo.prototype.eq = function ( i ) {
-	    return i < this._length 
-	            ? new Hobo(
-	                this._selector,
-	                this._context,
-	                [ this._nodeList[ i ] ]
-	            ) 
-	            : this;
-	};
-
-
-	Hobo.prototype.map = function ( fn ) {
-	    this._nodeList.forEach(function ( node ) {
-	        node = (fn() || node);
-
-	        return node;
-	    });
-
-	    return this;
-	};
-
-
-	Hobo.prototype.index = function () {
-	    return Array.prototype.indexOf.call(
-	        this._nodeList[ 0 ].parentNode.children,
-	        this._nodeList[ 0 ]
-	    );
-	};
-
-
-	Hobo.prototype.parent = function () {
-	    return new Hobo(
-	        "",
-	        null,
-	        [ this._nodeList[ 0 ].parentNode ]
-	    );
-	};
+	Hobo.prototype.eq = __webpack_require__( 5 );
+	Hobo.prototype.map = __webpack_require__( 6 );
+	Hobo.prototype.index = __webpack_require__( 7 );
+	Hobo.prototype.parent = __webpack_require__( 8 );
 
 
 	module.exports = Hobo;
@@ -619,6 +586,57 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	module.exports = function ( i ) {
+	    return i < this._length 
+	            ? new Hobo(
+	                this._selector,
+	                this._context,
+	                [ this._nodeList[ i ] ]
+	            ) 
+	            : this;
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = function ( fn ) {
+	    this._nodeList.forEach(function ( node ) {
+	        node = (fn() || node);
+
+	        return node;
+	    });
+
+	    return this;
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = function () {
+	    return Array.prototype.indexOf.call(
+	        this._nodeList[ 0 ].parentNode.children,
+	        this._nodeList[ 0 ]
+	    );
+	};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	module.exports = function () {
+	    return new Hobo(
+	        "",
+	        null,
+	        [ this._nodeList[ 0 ].parentNode ]
+	    );
+	};
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 4 );
@@ -678,7 +696,7 @@
 	};
 
 /***/ },
-/* 6 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/**
