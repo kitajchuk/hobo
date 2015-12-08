@@ -42,6 +42,7 @@
 
 
     // Extended Hobo methods
+    // Ultimately these will be removed
     Hobo.prototype.eq = require( "./lib/extended/eq" );
     Hobo.prototype.map = require( "./lib/extended/map" );
     Hobo.prototype.index = require( "./lib/extended/index" );

@@ -48,41 +48,68 @@
 
 
 
+	// Test core
+
+	// Test core: constructor
 	window.els = hobo( ".js-element", document.body );
 	window.foo = hobo( "#foo" );
+
+	// Test core: find
 	window.bar = foo.find( ".bar" );
 	window.bars = els.find( ".bar" );
+
+	// Test core: addClass / removeClass
+	window.bars.addClass( "added-class" );
+	window.bars.removeClass( "bar" );
+
+	// Test core: data
+	window.foo.data( "bk", "sucks" );
+
+	// Test core: on / off
 	window.fooHandler = function ( e ) {
-	    console.log( "foo", e );
+	    console.log( "event:foo", e, window.foo.data() );
+
+	    window.foo.off( "click", window.fooHandler );
 	};
 	window.barHandler = function ( e ) {
-	    console.log( "bar", e );
+	    console.log( "event:bar", e );
 	};
-
-
-
-	console.log( "els", els );
-	console.log( "foo", foo );
-	console.log( "bar", bar );
-	console.log( "bars", bars );
-
-
-
 	window.foo.on( "click", window.fooHandler );
 	window.foo.on( "click", ".bar", window.barHandler );
 
-
-
+	// Test core: ajax / promise
 	hobo.ajax({
 	    url: "endpoint.json",
 	    dataType: "json"
 
 	}).then(function ( value ) {
-	    console.log( "then", value );
+	    console.log( "ajax:then", value );
 
 	}).catch(function ( reason ) {
-	    console.log( "catch", reason );
+	    console.log( "ajax:catch", reason );
 	});
+
+
+
+	// Test extended
+
+	// Test extended: eq
+	console.log( "eq", window.els.eq( 3 ) );
+
+	// Test extended: map
+	// Test extended: index
+	window.els.map(function ( el ) {
+	    console.log( "map:", hobo( el ).index() );
+	});
+
+	// Test extended: parent
+	console.log( "parent", window.bar.parent() );
+
+	// Test extended: filter
+	console.log( "filter", window.els.filter( ".js-filtered" ) );
+
+
+
 
 /***/ },
 /* 1 */
@@ -132,6 +159,7 @@
 
 
 	    // Extended Hobo methods
+	    // Ultimately these will be removed
 	    Hobo.prototype.eq = __webpack_require__( 11 );
 	    Hobo.prototype.map = __webpack_require__( 12 );
 	    Hobo.prototype.index = __webpack_require__( 13 );
@@ -199,22 +227,38 @@
 	 *                          Optionally you can pass the nodelist Array too.
 	 *                          This is really just for the use of hobo().find().
 	 * @param {element} context The Element used to call `querySelectorAll`
-	 * @param {array} nodelist An already formed array of nodes
 	 *
 	 */
-	module.exports = function Hobo( selector, context, nodelist ) {
-	    this.cl
-	    // Hobo instance properties
+	module.exports = function Hobo( selector, context ) {
+	    // Hobo context
 	    this._context = (context && context.nodeType && context.nodeType === 1 ? context : document);
-	    this._nodeList = (Array.isArray( nodelist ) ? nodelist : utils.makeArray( this._context.querySelectorAll( selector ) ));
-	    this._selector = selector;
+
+	    // Hobo selector / nodeList
+	    // Hobo supports mixed selector argument
+
+	    // 0.1 => String
+	    if ( typeof selector === "string" ) {
+	        this._selector = selector;
+	        this._nodeList = utils.makeArray( this._context.querySelectorAll( selector ) );
+
+	    // 0.2 => DOMElement
+	    } else if ( selector.nodeType ) {
+	        this._selector = "";
+	        this._nodeList = [ selector ];
+
+	    // 0.3 => Collection: NodeList, HTMLCollection, Array
+	    } else if ( selector.length ) {
+	        this._selector = "";
+	        this._nodeList = utils.makeArray( selector );
+	    }
+	    
 
 	    // Hobo initialization steps
 	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
 	    this._nodeList.forEach( utils.mapDataset.bind( this ) );
 
 	    // Hobo version?
-	    this._version = utils.version;
+	    this._hobo = utils.version;
 
 	    // Hobo events store
 	    this._events = {};
@@ -399,7 +443,7 @@
 
 	    // Normalize event handler with a small wrapper function
 	    var handler = function ( e ) {
-	        var ctx = matchElement( e.target, selector );
+	        var ctx = matchElement( e.target, selector, true );
 
 	        // Only apply handler if ctx is not null
 	        if ( ctx ) {
@@ -628,7 +672,7 @@
 	            ret = ret.concat( utils.makeArray( node.querySelectorAll( selector ) ) );
 	        });
 
-	        ret = new Hobo( selector, null, ret );
+	        ret = new Hobo( ret, null );
 
 	    // Otherwise we can assume to use our single node as context
 	    } else {
@@ -656,9 +700,8 @@
 	module.exports = function ( i ) {
 	    return i < this._length 
 	            ? new Hobo(
-	                this._selector,
-	                this._context,
-	                [ this._nodeList[ i ] ]
+	                this._nodeList[ i ],
+	                this._context
 	            ) 
 	            : this;
 	};
@@ -677,7 +720,7 @@
 	 */
 	module.exports = function ( fn ) {
 	    this._nodeList.forEach(function ( node ) {
-	        node = (fn() || node);
+	        node = (fn( node ) || node);
 
 	        return node;
 	    });
@@ -721,9 +764,8 @@
 	 */
 	module.exports = function () {
 	    return new Hobo(
-	        "",
-	        null,
-	        [ this._nodeList[ 0 ].parentNode ]
+	        this._nodeList[ 0 ].parentNode,
+	        null
 	    );
 	};
 
@@ -752,7 +794,7 @@
 	        }
 	    });
 
-	    return new Hobo( selector, null, filtered );
+	    return new Hobo( filtered, null );
 	};
 
 /***/ },
@@ -778,7 +820,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method remove
 	 * @description ...
 	 * @returns {}
 	 *
@@ -794,7 +836,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method detach
 	 * @description ...
 	 * @returns {}
 	 *
@@ -810,7 +852,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method trigger
 	 * @description ...
 	 * @returns {}
 	 *
@@ -826,7 +868,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method prepend
 	 * @description ...
 	 * @returns {}
 	 *
@@ -842,7 +884,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method closest
 	 * @description ...
 	 * @returns {}
 	 *
@@ -858,7 +900,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method appendTo
 	 * @description ...
 	 * @returns {}
 	 *
@@ -874,7 +916,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method children
 	 * @description ...
 	 * @returns {}
 	 *
@@ -890,7 +932,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method prependTo
 	 * @description ...
 	 * @returns {}
 	 *
@@ -906,7 +948,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method toggleClass
 	 * @description ...
 	 * @returns {}
 	 *
@@ -922,7 +964,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method insertAfter
 	 * @description ...
 	 * @returns {}
 	 *
@@ -938,7 +980,7 @@
 	/**
 	 *
 	 * @public
-	 * @method append
+	 * @method insertBefore
 	 * @description ...
 	 * @returns {}
 	 *

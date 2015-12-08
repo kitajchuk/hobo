@@ -109,3 +109,4 @@ These are methods that can prove to be extremely useful when using jQuery, so th
 - toggleClass()
 - insertAfter()
 - insertBefore()
+- attr()

@@ -27,7 +27,7 @@
   ],
   "main": "hobo",
   "scripts": {
-    "watch": "chokidar hobo.js lib/**/*.js --initial -d 10 -c 'npm run tasks'",
+    "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run tasks'",
     "tasks": "parallelshell 'npm run build' 'npm run test'",
     "test": "webpack test/test.js test/dist/test.js",
     "build": "webpack hobo.js dist/hobo.js",
