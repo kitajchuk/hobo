@@ -48,46 +48,24 @@
 
 
 
-	// Test core
+	/*
+	// Test extended
 
-	// Test core: constructor
-	window.els = hobo( ".js-element", document.body );
-	window.foo = hobo( "#foo" );
+	// Test extended: eq
+	console.log( "eq", window.els.eq( 3 ) );
 
-	// Test core: find
-	window.bar = foo.find( ".bar" );
-	window.bars = els.find( ".bar" );
-
-	// Test core: addClass / removeClass
-	window.bars.addClass( "added-class" );
-	window.bars.removeClass( "bar" );
-
-	// Test core: data
-	window.foo.data( "bk", "sucks" );
-
-	// Test core: on / off
-	window.fooHandler = function ( e ) {
-	    console.log( "event:foo", e, window.foo.data() );
-
-	    window.foo.off( "click", window.fooHandler );
-	};
-	window.barHandler = function ( e ) {
-	    console.log( "event:bar", e );
-	};
-	window.foo.on( "click", window.fooHandler );
-	window.foo.on( "click", ".bar", window.barHandler );
-
-	// Test core: ajax / promise
-	hobo.ajax({
-	    url: "endpoint.json",
-	    dataType: "json"
-
-	}).then(function ( value ) {
-	    console.log( "ajax:then", value );
-
-	}).catch(function ( reason ) {
-	    console.log( "ajax:catch", reason );
+	// Test extended: map
+	// Test extended: index
+	window.els.map(function ( el ) {
+	    console.log( "map:", hobo( el ).index() );
 	});
+
+	// Test extended: parent
+	console.log( "parent", window.bar.parent() );
+
+	// Test extended: filter
+	console.log( "filter", window.els.filter( ".js-filtered" ) );
+	*/
 
 /***/ },
 /* 1 */
@@ -136,6 +114,28 @@
 	    Hobo.prototype.removeClass = __webpack_require__( 10 );
 
 
+	    // Extended Hobo methods
+	    // Ultimately these will be removed
+	    Hobo.prototype.eq = __webpack_require__( 11 );
+	    Hobo.prototype.map = __webpack_require__( 12 );
+	    Hobo.prototype.attr = __webpack_require__( 13 );
+	    Hobo.prototype.index = __webpack_require__( 14 );
+	    Hobo.prototype.parent = __webpack_require__( 15 );
+	    Hobo.prototype.filter = __webpack_require__( 16 );
+	    Hobo.prototype.append = __webpack_require__( 17 );
+	    Hobo.prototype.remove = __webpack_require__( 18 );
+	    Hobo.prototype.detach = __webpack_require__( 19 );
+	    Hobo.prototype.trigger = __webpack_require__( 20 );
+	    Hobo.prototype.prepend = __webpack_require__( 21 );
+	    Hobo.prototype.closest = __webpack_require__( 22 );
+	    Hobo.prototype.appendTo = __webpack_require__( 23 );
+	    Hobo.prototype.children = __webpack_require__( 24 );
+	    Hobo.prototype.prependTo = __webpack_require__( 25 );
+	    Hobo.prototype.toggleClass = __webpack_require__( 26 );
+	    Hobo.prototype.insertAfter = __webpack_require__( 27 );
+	    Hobo.prototype.insertBefore = __webpack_require__( 28 );
+
+
 	    /**
 	     *
 	     * @public
@@ -151,8 +151,8 @@
 
 
 	    // Attach Hobo utilities to `wrapper` method
-	    hobo.ajax = __webpack_require__( 11 );
-	    hobo.promise = __webpack_require__( 12 );
+	    hobo.ajax = __webpack_require__( 29 );
+	    hobo.promise = __webpack_require__( 30 );
 
 
 	    return hobo;
@@ -640,6 +640,329 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Hobo = __webpack_require__( 2 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method eq
+	 * @description Get a Hobo instance for the node at an index.
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    return i < this._length 
+	            ? new Hobo(
+	                this._nodeList[ i ],
+	                this._context
+	            ) 
+	            : this;
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method map
+	 * @description Like Array map but for Hobo intances.
+	 * @returns {this}
+	 *
+	 */
+	module.exports = function ( fn ) {
+	    this._nodeList.forEach(function ( node ) {
+	        node = (fn( node ) || node);
+
+	        return node;
+	    });
+
+	    return this;
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method attr
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method index
+	 * @description Get the nodes index compared to its siblings.
+	 * @returns {number}
+	 *
+	 */
+	module.exports = function () {
+	    return Array.prototype.indexOf.call(
+	        this._nodeList[ 0 ].parentNode.children,
+	        this._nodeList[ 0 ]
+	    );
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Hobo = __webpack_require__( 2 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method parent
+	 * @description Get a Hobo instance of the parent node of this instance.
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function () {
+	    return new Hobo(
+	        this._nodeList[ 0 ].parentNode,
+	        null
+	    );
+	};
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Hobo = __webpack_require__( 2 ),
+	    matchElement = __webpack_require__( 3 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method parent
+	 * @description Get a Hobo instance of the parent node of this instance.
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( selector ) {
+	    var filtered = [];
+
+	    this._nodeList.forEach(function ( node ) {
+	        if ( matchElement( node, selector ) ) {
+	            filtered.push( node );
+	        }
+	    });
+
+	    return new Hobo( filtered, null );
+	};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method append
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method remove
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method detach
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method trigger
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method prepend
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method closest
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method appendTo
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method children
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method prependTo
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method toggleClass
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method insertAfter
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method insertBefore
+	 * @description ...
+	 * @returns {}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    
+	};
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var utils = __webpack_require__( 4 );
 
 
@@ -697,7 +1020,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 30 */
 /***/ function(module, exports) {
 
 	/**

@@ -27,11 +27,15 @@
   ],
   "main": "hobo",
   "scripts": {
-    "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run tasks'",
-    "tasks": "parallelshell 'npm run build' 'npm run test'",
+    "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/*.js' --initial -d 10 -c 'npm run tasks'",
+    "tasks": "parallelshell 'npm run test' 'npm run build'",
+    "posttasks": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js ; uglifyjs --compress --mangle --output dist/hobo-extended.min.js dist/hobo-extended.js",
+
     "test": "webpack test/test.js test/dist/test.js",
+    "posttest": "webpack test/test-extended.js test/dist/test-extended.js",
+
     "build": "webpack hobo.js dist/hobo.js",
-    "postbuild": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js"
+    "postbuild": "webpack hobo-extended.js dist/hobo-extended.js ; "
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"

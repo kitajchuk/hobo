@@ -82,30 +82,9 @@
 	    Hobo.prototype.on = __webpack_require__( 4 );
 	    Hobo.prototype.off = __webpack_require__( 5 );
 	    Hobo.prototype.data = __webpack_require__( 6 );
-	    Hobo.prototype.addClass = __webpack_require__( 7 );
-	    Hobo.prototype.removeClass = __webpack_require__( 8 );
-	    Hobo.prototype.find = __webpack_require__( 9 );
-
-
-	    // Extended Hobo methods
-	    // Ultimately these will be removed
-	    Hobo.prototype.eq = __webpack_require__( 10 );
-	    Hobo.prototype.map = __webpack_require__( 11 );
-	    Hobo.prototype.index = __webpack_require__( 12 );
-	    Hobo.prototype.parent = __webpack_require__( 13 );
-	    Hobo.prototype.filter = __webpack_require__( 14 );
-	    Hobo.prototype.append = __webpack_require__( 15 );
-	    Hobo.prototype.remove = __webpack_require__( 16 );
-	    Hobo.prototype.detach = __webpack_require__( 17 );
-	    Hobo.prototype.trigger = __webpack_require__( 18 );
-	    Hobo.prototype.prepend = __webpack_require__( 19 );
-	    Hobo.prototype.closest = __webpack_require__( 20 );
-	    Hobo.prototype.appendTo = __webpack_require__( 21 );
-	    Hobo.prototype.children = __webpack_require__( 22 );
-	    Hobo.prototype.prependTo = __webpack_require__( 23 );
-	    Hobo.prototype.toggleClass = __webpack_require__( 24 );
-	    Hobo.prototype.insertAfter = __webpack_require__( 25 );
-	    Hobo.prototype.insertBefore = __webpack_require__( 26 );
+	    Hobo.prototype.find = __webpack_require__( 7 );
+	    Hobo.prototype.addClass = __webpack_require__( 8 );
+	    Hobo.prototype.removeClass = __webpack_require__( 9 );
 
 
 	    /**
@@ -123,8 +102,8 @@
 
 
 	    // Attach Hobo utilities to `wrapper` method
-	    hobo.ajax = __webpack_require__( 27 );
-	    hobo.promise = __webpack_require__( 28 );
+	    hobo.ajax = __webpack_require__( 10 );
+	    hobo.promise = __webpack_require__( 11 );
 
 
 	    return hobo;
@@ -152,18 +131,19 @@
 	 * @private
 	 * @class Hobo
 	 * @classdesc All the things you want without all the cruft.
-	 * @param {string} selector The parameter passed to `querySelectorAll`
-	 *                          Optionally you can pass the nodelist Array too.
-	 *                          This is really just for the use of hobo().find().
+	 * @param {string} selector The goods - String, Element, Collection.
 	 * @param {element} context The Element used to call `querySelectorAll`
 	 *
 	 */
 	module.exports = function Hobo( selector, context ) {
+	    // Hobo version?
+	    this._hobo = utils.version;
+
 	    // Hobo context
 	    this._context = (context && context.nodeType && context.nodeType === 1 ? context : document);
 
 	    // Hobo selector / nodeList
-	    // Hobo supports mixed selector argument
+	    // Hobo supports a mixed selector argument
 
 	    // 0.1 => String
 	    if ( typeof selector === "string" ) {
@@ -180,14 +160,10 @@
 	        this._selector = "";
 	        this._nodeList = utils.makeArray( selector );
 	    }
-	    
 
 	    // Hobo initialization steps
 	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
 	    this._nodeList.forEach( utils.mapDataset.bind( this ) );
-
-	    // Hobo version?
-	    this._hobo = utils.version;
 
 	    // Hobo events store
 	    this._events = {};
@@ -512,66 +488,6 @@
 
 /***/ },
 /* 7 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @instance
-	 * @method addClass
-	 * @description Add one or more classNames to the nodes.
-	 * @param {string} classes The space-separated classNames
-	 *
-	 */
-	module.exports = function ( classes ) {
-	    this._nodeList.forEach(function ( element ) {
-	        var newClass = classes.split( " " ),
-	            elsClass = element.className.split( " " );
-
-	        newClass.forEach(function ( klass ) {
-	            if ( elsClass.indexOf( klass ) === -1 ) {
-	                elsClass.push( klass );
-	            }
-	        });
-
-	        element.className = elsClass.join( " " );
-	    });
-
-	    return this;
-	};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @instance
-	 * @method removeClass
-	 * @description Remove one or more classNames from the nodes.
-	 * @param {string} classes The space-separated classNames
-	 *
-	 */
-	module.exports = function ( classes ) {
-	    this._nodeList.forEach(function ( element ) {
-	        var oldClass = classes.split( " " ),
-	            elsClass = element.className.split( " " );
-
-	        oldClass.forEach(function ( klass ) {
-	            if ( elsClass.indexOf( klass ) !== -1 ) {
-	                elsClass.splice( elsClass.indexOf( klass ), 1 );
-	            }
-	        });
-
-	        element.className = elsClass.join( " " );
-	    });
-
-	    return this;
-	};
-
-/***/ },
-/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
@@ -612,314 +528,67 @@
 	};
 
 /***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Hobo = __webpack_require__( 1 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method eq
-	 * @description Get a Hobo instance for the node at an index.
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    return i < this._length 
-	            ? new Hobo(
-	                this._nodeList[ i ],
-	                this._context
-	            ) 
-	            : this;
-	};
-
-/***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
 	 *
 	 * @public
-	 * @method map
-	 * @description Like Array map but for Hobo intances.
-	 * @returns {this}
+	 * @instance
+	 * @method addClass
+	 * @description Add one or more classNames to the nodes.
+	 * @param {string} classes The space-separated classNames
 	 *
 	 */
-	module.exports = function ( fn ) {
-	    this._nodeList.forEach(function ( node ) {
-	        node = (fn( node ) || node);
+	module.exports = function ( classes ) {
+	    this._nodeList.forEach(function ( element ) {
+	        var newClass = classes.split( " " ),
+	            elsClass = element.className.split( " " );
 
-	        return node;
+	        newClass.forEach(function ( klass ) {
+	            if ( elsClass.indexOf( klass ) === -1 ) {
+	                elsClass.push( klass );
+	            }
+	        });
+
+	        element.className = elsClass.join( " " );
 	    });
 
 	    return this;
 	};
 
 /***/ },
-/* 12 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
 	 *
 	 * @public
-	 * @method index
-	 * @description Get the nodes index compared to its siblings.
-	 * @returns {number}
+	 * @instance
+	 * @method removeClass
+	 * @description Remove one or more classNames from the nodes.
+	 * @param {string} classes The space-separated classNames
 	 *
 	 */
-	module.exports = function () {
-	    return Array.prototype.indexOf.call(
-	        this._nodeList[ 0 ].parentNode.children,
-	        this._nodeList[ 0 ]
-	    );
-	};
+	module.exports = function ( classes ) {
+	    this._nodeList.forEach(function ( element ) {
+	        var oldClass = classes.split( " " ),
+	            elsClass = element.className.split( " " );
 
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+	        oldClass.forEach(function ( klass ) {
+	            if ( elsClass.indexOf( klass ) !== -1 ) {
+	                elsClass.splice( elsClass.indexOf( klass ), 1 );
+	            }
+	        });
 
-	var Hobo = __webpack_require__( 1 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method parent
-	 * @description Get a Hobo instance of the parent node of this instance.
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function () {
-	    return new Hobo(
-	        this._nodeList[ 0 ].parentNode,
-	        null
-	    );
-	};
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Hobo = __webpack_require__( 1 ),
-	    matchElement = __webpack_require__( 2 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method parent
-	 * @description Get a Hobo instance of the parent node of this instance.
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( selector ) {
-	    var filtered = [];
-
-	    this._nodeList.forEach(function ( node ) {
-	        if ( matchElement( node, selector ) ) {
-	            filtered.push( node );
-	        }
+	        element.className = elsClass.join( " " );
 	    });
 
-	    return new Hobo( filtered, null );
+	    return this;
 	};
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method append
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method remove
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method detach
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method trigger
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method prepend
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method closest
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method appendTo
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method children
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method prependTo
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method toggleClass
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method insertAfter
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method insertBefore
-	 * @description ...
-	 * @returns {}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    
-	};
-
-/***/ },
-/* 27 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 3 );
@@ -979,7 +648,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/**

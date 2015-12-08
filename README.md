@@ -110,3 +110,6 @@ These are methods that can prove to be extremely useful when using jQuery, so th
 - insertAfter()
 - insertBefore()
 - attr()
+- next()
+- prev()
+- one()

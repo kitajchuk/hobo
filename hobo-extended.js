@@ -41,6 +41,28 @@
     Hobo.prototype.removeClass = require( "./lib/core/removeClass" );
 
 
+    // Extended Hobo methods
+    // Ultimately these will be removed
+    Hobo.prototype.eq = require( "./lib/extended/eq" );
+    Hobo.prototype.map = require( "./lib/extended/map" );
+    Hobo.prototype.attr = require( "./lib/extended/attr" );
+    Hobo.prototype.index = require( "./lib/extended/index" );
+    Hobo.prototype.parent = require( "./lib/extended/parent" );
+    Hobo.prototype.filter = require( "./lib/extended/filter" );
+    Hobo.prototype.append = require( "./lib/extended/append" );
+    Hobo.prototype.remove = require( "./lib/extended/remove" );
+    Hobo.prototype.detach = require( "./lib/extended/detach" );
+    Hobo.prototype.trigger = require( "./lib/extended/trigger" );
+    Hobo.prototype.prepend = require( "./lib/extended/prepend" );
+    Hobo.prototype.closest = require( "./lib/extended/closest" );
+    Hobo.prototype.appendTo = require( "./lib/extended/appendTo" );
+    Hobo.prototype.children = require( "./lib/extended/children" );
+    Hobo.prototype.prependTo = require( "./lib/extended/prependTo" );
+    Hobo.prototype.toggleClass = require( "./lib/extended/toggleClass" );
+    Hobo.prototype.insertAfter = require( "./lib/extended/insertAfter" );
+    Hobo.prototype.insertBefore = require( "./lib/extended/insertBefore" );
+
+
     /**
      *
      * @public
