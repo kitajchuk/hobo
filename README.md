@@ -113,3 +113,8 @@ These are methods that can make jQuery powerful. They are not included in hobo c
 - next()
 - prev()
 - one()
+
+
+
+## Testing / Support
+Hobo is not fully tested - but its built for all modern browsers. Any notes or insights into making Hobo better are gladly welcomed.
