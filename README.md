@@ -90,13 +90,14 @@ hobo.promise(function ( resolve, reject ) {
 
 
 ## Hobo Consideration Methods
-These are methods that can prove to be extremely useful when using jQuery, so there are considerations to supporting some of them within Hobo.
+These are methods that can make jQuery powerful. They are not included in hobo core. Use `hobo-extended.js` to include these.
 
-- eq()
-- map()
-- index()
-- parent()
-- filter()
+- [eq()](https://github.com/ProperJS/hobo/blob/master/lib/extended/eq.js)
+- [map()](https://github.com/ProperJS/hobo/blob/master/lib/extended/map.js)
+- [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
+- [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
+- [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
+- [filter()](https://github.com/ProperJS/hobo/blob/master/lib/extended/filter.js)
 - append()
 - remove()
 - detach()
@@ -109,7 +110,6 @@ These are methods that can prove to be extremely useful when using jQuery, so th
 - toggleClass()
 - insertAfter()
 - insertBefore()
-- attr()
 - next()
 - prev()
 - one()
