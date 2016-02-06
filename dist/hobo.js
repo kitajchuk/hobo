@@ -169,7 +169,7 @@
 	    this._events = {};
 
 	    // Hobo length?
-	    this._length = this._nodeList.length;
+	    this.length = this._nodeList.length;
 	};
 
 /***/ },

@@ -191,7 +191,7 @@
 	    this._events = {};
 
 	    // Hobo length?
-	    this._length = this._nodeList.length;
+	    this.length = this._nodeList.length;
 	};
 
 /***/ },
@@ -625,7 +625,7 @@
 	 *
 	 */
 	module.exports = function ( i ) {
-	    return i < this._length 
+	    return i < this.length 
 	            ? new Hobo(
 	                this._nodeList[ i ],
 	                this._context
@@ -663,12 +663,19 @@
 	 *
 	 * @public
 	 * @method attr
-	 * @description ...
-	 * @returns {}
+	 * @description Get or Set an attribute on a DOM node
+	 * @returns {string}
 	 *
 	 */
-	module.exports = function ( i ) {
-	    
+	module.exports = function ( key, value ) {
+	    if ( value ) {
+	        this._nodeList.forEach(function ( node ) {
+	            node.setAttribute( key, value );
+	        });
+
+	    } else {
+	        return this._nodeList[ 0 ].getAttribute( key );
+	    }
 	};
 
 /***/ },
