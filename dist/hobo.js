@@ -671,7 +671,9 @@
 	 */
 	module.exports = function () {
 	    this.forEach(function ( node ) {
-	        node.parentNode.removeChild( node );
+	        if ( node.parentNode ) {
+	            node.parentNode.removeChild( node );
+	        }
 	    });
 
 	    return this;
