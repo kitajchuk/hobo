@@ -104,7 +104,6 @@ These are methods that can make jQuery powerful. They are not included in hobo c
 - [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
 - [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
 - [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
-- append()
 - remove()
 - trigger()
 - prepend()
