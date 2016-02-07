@@ -90,7 +90,7 @@ hobo.promise(function ( resolve, reject ) {
 - ajax()
 - promise()
 
-### Native Array Methods
+## Native Array Methods
 - map()
 - push()
 - splice()
@@ -101,7 +101,6 @@ hobo.promise(function ( resolve, reject ) {
 ## Hobo Consideration Methods
 These are methods that can make jQuery powerful. They are not included in hobo core. Use `hobo-extended.js` to include these.
 
-- [map()](https://github.com/ProperJS/hobo/blob/master/lib/extended/map.js)
 - [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
 - [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
 - [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
