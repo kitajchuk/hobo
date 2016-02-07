@@ -47,8 +47,9 @@
 	/*!
 	 *
 	 *
-	 * @hobo
-	 * @author: kitajchuk
+	 * @method hobo
+	 * @author kitajchuk
+	 * @hobo-dist npm run build
 	 *
 	 * @links
 	 * https://developer.mozilla.org/en-US/docs/Web/API/Node
@@ -78,18 +79,17 @@
 	        utils = __webpack_require__( 2 );
 
 
-	    // Core Hobo methods
+	    // Core Hobo methods:
 	    Hobo.prototype.on = __webpack_require__( 3 );
-	    Hobo.prototype.eq = __webpack_require__( 5 );
-	    Hobo.prototype.not = __webpack_require__( 6 );
-	    Hobo.prototype.off = __webpack_require__( 7 );
-	    Hobo.prototype.data = __webpack_require__( 8 );
-	    Hobo.prototype.find = __webpack_require__( 9 );
-	    Hobo.prototype.filter = __webpack_require__( 10 );
-	    Hobo.prototype.detach = __webpack_require__( 11 );
-	    Hobo.prototype.append = __webpack_require__( 12 );
-	    Hobo.prototype.addClass = __webpack_require__( 13 );
-	    Hobo.prototype.removeClass = __webpack_require__( 14 );
+	    Hobo.prototype.off = __webpack_require__( 5 );
+	    Hobo.prototype.data = __webpack_require__( 6 );
+	    Hobo.prototype.find = __webpack_require__( 7 );
+	    Hobo.prototype.addClass = __webpack_require__( 8 );
+	    Hobo.prototype.removeClass = __webpack_require__( 9 );
+
+
+	    // Extended Hobo methods:
+	    // @hobo-ext
 
 
 	    /**
@@ -107,8 +107,8 @@
 
 
 	    // Attach Hobo utilities to `wrapper` method
-	    hobo.ajax = __webpack_require__( 15 );
-	    hobo.promise = __webpack_require__( 16 );
+	    hobo.ajax = __webpack_require__( 10 );
+	    hobo.promise = __webpack_require__( 11 );
 
 
 	    return hobo;
@@ -128,7 +128,7 @@
 	 *
 	 */
 	var utils = __webpack_require__( 2 ),
-	    arr = [];
+	    array = [];
 
 
 	/**
@@ -141,8 +141,6 @@
 	 *
 	 */
 	var Hobo = function ( selector, context ) {
-	    var elements = null;
-
 	    // Hobo version?
 	    this._hobo = utils.version;
 
@@ -155,30 +153,28 @@
 	    // 0.1 => String
 	    if ( typeof selector === "string" ) {
 	        this._selector = selector;
-	        elements = utils.makeArray( this._context.querySelectorAll( selector ) );
+	        selector = utils.makeArray( this._context.querySelectorAll( selector ) );
 
 	    // 0.2 => DOMElement
 	    } else if ( selector.nodeType ) {
 	        this._selector = "";
-	        elements = [ selector ];
+	        selector = [ selector ];
 
 	    // 0.3 => Collection: NodeList, HTMLCollection, Array
 	    } else if ( selector.length !== undefined ) {
 	        this._selector = "";
-	        elements = utils.makeArray( selector );
+	        selector = utils.makeArray( selector );
 	    }
-
-	    // Hobo initialization steps
 
 	    // Hobo events?
 	    this._events = {};
 
 	    // Hobo length?
-	    this.length = elements.length;
+	    this.length = selector.length;
 
 	    // Hobo elements?
 	    for ( var i = this.length; i--; ) {
-	        this[ i ] = elements[ i ];
+	        this[ i ] = selector[ i ];
 	    }
 
 	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
@@ -187,19 +183,19 @@
 
 
 	// Shim Array-like presentation in console
-	Hobo.prototype.splice = arr.splice;
+	Hobo.prototype.splice = array.splice;
 
 
 	// Make sure Hobo is iterable like an Array
-	Hobo.prototype.forEach = arr.forEach;
+	Hobo.prototype.forEach = array.forEach;
 
 
 	// Make sure Hobo is pushable like an Array
-	Hobo.prototype.push = arr.push;
+	Hobo.prototype.push = array.push;
 
 
 	// Make sure Hobo is mappable like an Array
-	Hobo.prototype.map = arr.map;
+	Hobo.prototype.map = array.map;
 
 
 	// Export the main Hobo Class :D
@@ -406,75 +402,6 @@
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Hobo = __webpack_require__( 1 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method eq
-	 * @description Get a Hobo instance for the node at an index.
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( i ) {
-	    return i < this.length 
-	            ? new Hobo(
-	                this[ i ],
-	                this._context
-	            ) 
-	            : this;
-	};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var matchElement = __webpack_require__( 4 ),
-	    Hobo = __webpack_require__( 1 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method not
-	 * @description Filter out elements that are NOT this selector
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( selector ) {
-	    var ret = [];
-
-	    if ( selector instanceof Hobo ) {
-	        this.forEach(function ( node ) {
-	            var push = true;
-
-	            selector.forEach(function ( elem ) {
-	                if ( node === elem ) {
-	                    push = false;
-	                }
-	            });
-
-	            if ( push ) {
-	                ret.push( node );
-	            }
-	        });
-
-	    } else {
-	        this.forEach(function ( node ) {
-	            if ( !matchElement( node, selector ) ) {
-	                ret.push( node );
-	            }
-	        });
-	    }
-
-	    return new Hobo( ret, this._context );
-	};
-
-/***/ },
-/* 7 */
 /***/ function(module, exports) {
 
 	/**
@@ -520,7 +447,7 @@
 	};
 
 /***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
@@ -589,7 +516,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
@@ -630,91 +557,7 @@
 	};
 
 /***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Hobo = __webpack_require__( 1 ),
-	    matchElement = __webpack_require__( 4 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method parent
-	 * @description Get a Hobo instance of the parent node of this instance.
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( selector ) {
-	    var filtered = [];
-
-	    this.forEach(function ( node ) {
-	        if ( matchElement( node, selector ) ) {
-	            filtered.push( node );
-	        }
-	    });
-
-	    return new Hobo( filtered, null );
-	};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	/**
-	 *
-	 * @public
-	 * @method detach
-	 * @description Detach the nodes from the DOM
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function () {
-	    this.forEach(function ( node ) {
-	        if ( node.parentNode ) {
-	            node.parentNode.removeChild( node );
-	        }
-	    });
-
-	    return this;
-	};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Hobo = __webpack_require__( 1 );
-
-
-	/**
-	 *
-	 * @public
-	 * @method append
-	 * @param {mixed} appendage What to append? Hobo, Element...
-	 * @description Append the nodes to the DOM
-	 * @returns {Hobo}
-	 *
-	 */
-	module.exports = function ( appendage ) {
-	    this.forEach(function ( node ) {
-	        // Hobo instance OR Array OR Array-like object with forEach
-	        if ( appendage instanceof Hobo || (appendage.length && typeof appendage.forEach === "function") ) {
-	            appendage.forEach(function ( append ) {
-	                if ( append.nodeType ) {
-	                    node.appendChild( append );
-	                }
-	            });
-
-	        } else if ( appendage.nodeType ) {
-	            node.appendChild( appendage );
-	        }
-	    });
-
-	    return this;
-	};
-
-/***/ },
-/* 13 */
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -744,7 +587,7 @@
 	};
 
 /***/ },
-/* 14 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
@@ -774,7 +617,7 @@
 	};
 
 /***/ },
-/* 15 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
@@ -834,7 +677,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/**
