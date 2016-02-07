@@ -34,9 +34,14 @@
 
     // Core Hobo methods
     Hobo.prototype.on = require( "./lib/core/on" );
+    Hobo.prototype.eq = require( "./lib/core/eq" );
+    Hobo.prototype.not = require( "./lib/core/not" );
     Hobo.prototype.off = require( "./lib/core/off" );
     Hobo.prototype.data = require( "./lib/core/data" );
     Hobo.prototype.find = require( "./lib/core/find" );
+    Hobo.prototype.filter = require( "./lib/core/filter" );
+    Hobo.prototype.detach = require( "./lib/core/detach" );
+    Hobo.prototype.append = require( "./lib/core/append" );
     Hobo.prototype.addClass = require( "./lib/core/addClass" );
     Hobo.prototype.removeClass = require( "./lib/core/removeClass" );
 

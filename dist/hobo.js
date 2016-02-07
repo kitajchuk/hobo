@@ -75,16 +75,21 @@
 	})(function () {
 
 	    var Hobo = __webpack_require__( 1 ),
-	        utils = __webpack_require__( 3 );
+	        utils = __webpack_require__( 2 );
 
 
 	    // Core Hobo methods
-	    Hobo.prototype.on = __webpack_require__( 4 );
-	    Hobo.prototype.off = __webpack_require__( 5 );
-	    Hobo.prototype.data = __webpack_require__( 6 );
-	    Hobo.prototype.find = __webpack_require__( 7 );
-	    Hobo.prototype.addClass = __webpack_require__( 8 );
-	    Hobo.prototype.removeClass = __webpack_require__( 9 );
+	    Hobo.prototype.on = __webpack_require__( 3 );
+	    Hobo.prototype.eq = __webpack_require__( 5 );
+	    Hobo.prototype.not = __webpack_require__( 6 );
+	    Hobo.prototype.off = __webpack_require__( 7 );
+	    Hobo.prototype.data = __webpack_require__( 8 );
+	    Hobo.prototype.find = __webpack_require__( 9 );
+	    Hobo.prototype.filter = __webpack_require__( 10 );
+	    Hobo.prototype.detach = __webpack_require__( 11 );
+	    Hobo.prototype.append = __webpack_require__( 12 );
+	    Hobo.prototype.addClass = __webpack_require__( 13 );
+	    Hobo.prototype.removeClass = __webpack_require__( 14 );
 
 
 	    /**
@@ -102,8 +107,8 @@
 
 
 	    // Attach Hobo utilities to `wrapper` method
-	    hobo.ajax = __webpack_require__( 10 );
-	    hobo.promise = __webpack_require__( 11 );
+	    hobo.ajax = __webpack_require__( 15 );
+	    hobo.promise = __webpack_require__( 16 );
 
 
 	    return hobo;
@@ -122,8 +127,8 @@
 	 *
 	 *
 	 */
-	var matchElement = __webpack_require__( 2 ),
-	    utils = __webpack_require__( 3 );
+	var utils = __webpack_require__( 2 ),
+	    arr = [];
 
 
 	/**
@@ -135,107 +140,73 @@
 	 * @param {element} context The Element used to call `querySelectorAll`
 	 *
 	 */
-	module.exports = function Hobo( selector, context ) {
+	var Hobo = function ( selector, context ) {
+	    var elements = null;
+
 	    // Hobo version?
 	    this._hobo = utils.version;
 
 	    // Hobo context
 	    this._context = (context && context.nodeType && context.nodeType === 1 ? context : document);
 
-	    // Hobo selector / nodeList
+	    // Hobo selector / elements
 	    // Hobo supports a mixed selector argument
 
 	    // 0.1 => String
 	    if ( typeof selector === "string" ) {
 	        this._selector = selector;
-	        this._nodeList = utils.makeArray( this._context.querySelectorAll( selector ) );
+	        elements = utils.makeArray( this._context.querySelectorAll( selector ) );
 
 	    // 0.2 => DOMElement
 	    } else if ( selector.nodeType ) {
 	        this._selector = "";
-	        this._nodeList = [ selector ];
+	        elements = [ selector ];
 
 	    // 0.3 => Collection: NodeList, HTMLCollection, Array
-	    } else if ( selector.length ) {
+	    } else if ( selector.length !== undefined ) {
 	        this._selector = "";
-	        this._nodeList = utils.makeArray( selector );
+	        elements = utils.makeArray( selector );
 	    }
 
 	    // Hobo initialization steps
-	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
-	    this._nodeList.forEach( utils.mapDataset.bind( this ) );
 
-	    // Hobo events store
+	    // Hobo events?
 	    this._events = {};
 
 	    // Hobo length?
-	    this.length = this._nodeList.length;
+	    this.length = elements.length;
+
+	    // Hobo elements?
+	    for ( var i = this.length; i--; ) {
+	        this[ i ] = elements[ i ];
+	    }
+
+	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
+	    this.forEach( utils.mapDataset.bind( this ) );
 	};
+
+
+	// Shim Array-like presentation in console
+	Hobo.prototype.splice = arr.splice;
+
+
+	// Make sure Hobo is iterable like an Array
+	Hobo.prototype.forEach = arr.forEach;
+
+
+	// Make sure Hobo is pushable like an Array
+	Hobo.prototype.push = arr.push;
+
+
+	// Make sure Hobo is mappable like an Array
+	Hobo.prototype.map = arr.map;
+
+
+	// Export the main Hobo Class :D
+	module.exports = Hobo;
 
 /***/ },
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*!
-	 *
-	 * Use native element selector matching
-	 *
-	 * @matchElement
-	 * @author: kitajchuk
-	 *
-	 */
-	(function ( factory ) {
-	    
-	    if ( true ) {
-	        module.exports = factory();
-
-	    } else if ( typeof window !== "undefined" ) {
-	        window.matchElement = factory();
-	    }
-	    
-	})(function () {
-
-	    /**
-	     *
-	     * Use native element selector matching
-	     * @memberof! <global>
-	     * @method matchElement
-	     * @param {object} el the element
-	     * @param {string} selector the selector to match
-	     * @param {boolean} walk should we walk the tree if el is not a match?
-	     * @returns element OR null
-	     *
-	     */
-	    var matchElement = function ( el, selector, walk ) {
-	        var method = ( el.matches ) ? "matches" : ( el.webkitMatchesSelector ) ? 
-	                                      "webkitMatchesSelector" : ( el.mozMatchesSelector ) ? 
-	                                      "mozMatchesSelector" : ( el.msMatchesSelector ) ? 
-	                                      "msMatchesSelector" : ( el.oMatchesSelector ) ? 
-	                                      "oMatchesSelector" : null;
-
-	        // Try testing the element against the selector
-	        // 0.1 => Method is not undefined
-	        // 0.2 => Element passes method call
-	        if ( method && el[ method ].call( el, selector ) ) {
-	            return el;
-
-	        // Keep walking up the DOM if we can - only if `walk` flag is `true`
-	        } else if ( walk && el !== document.documentElement && el.parentNode ) {
-	            return matchElement( el.parentNode, selector, walk );
-
-	        // Otherwise we should not execute an event
-	        } else {
-	            return null;
-	        }
-	    };
-
-
-	    return matchElement;
-
-	});
-
-/***/ },
-/* 3 */
 /***/ function(module, exports) {
 
 	/*!
@@ -320,11 +291,11 @@
 	};
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var matchElement = __webpack_require__( 2 ),
-	    utils = __webpack_require__( 3 );
+	var matchElement = __webpack_require__( 4 ),
+	    utils = __webpack_require__( 2 );
 
 
 	/**
@@ -372,7 +343,138 @@
 	};
 
 /***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*!
+	 *
+	 * Use native element selector matching
+	 *
+	 * @matchElement
+	 * @author: kitajchuk
+	 *
+	 */
+	(function ( factory ) {
+	    
+	    if ( true ) {
+	        module.exports = factory();
+
+	    } else if ( typeof window !== "undefined" ) {
+	        window.matchElement = factory();
+	    }
+	    
+	})(function () {
+
+	    /**
+	     *
+	     * Use native element selector matching
+	     * @memberof! <global>
+	     * @method matchElement
+	     * @param {object} el the element
+	     * @param {string} selector the selector to match
+	     * @param {boolean} walk should we walk the tree if el is not a match?
+	     * @returns element OR null
+	     *
+	     */
+	    var matchElement = function ( el, selector, walk ) {
+	        var method = ( el.matches ) ? "matches" : ( el.webkitMatchesSelector ) ? 
+	                                      "webkitMatchesSelector" : ( el.mozMatchesSelector ) ? 
+	                                      "mozMatchesSelector" : ( el.msMatchesSelector ) ? 
+	                                      "msMatchesSelector" : ( el.oMatchesSelector ) ? 
+	                                      "oMatchesSelector" : null;
+
+	        // Try testing the element against the selector
+	        // 0.1 => Method is not undefined
+	        // 0.2 => Element passes method call
+	        if ( method && el[ method ].call( el, selector ) ) {
+	            return el;
+
+	        // Keep walking up the DOM if we can - only if `walk` flag is `true`
+	        } else if ( walk && el !== document.documentElement && el.parentNode ) {
+	            return matchElement( el.parentNode, selector, walk );
+
+	        // Otherwise we should not execute an event
+	        } else {
+	            return null;
+	        }
+	    };
+
+
+	    return matchElement;
+
+	});
+
+/***/ },
 /* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Hobo = __webpack_require__( 1 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method eq
+	 * @description Get a Hobo instance for the node at an index.
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( i ) {
+	    return i < this.length 
+	            ? new Hobo(
+	                this[ i ],
+	                this._context
+	            ) 
+	            : this;
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var matchElement = __webpack_require__( 4 ),
+	    Hobo = __webpack_require__( 1 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method not
+	 * @description Filter out elements that are NOT this selector
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( selector ) {
+	    var ret = [];
+
+	    if ( selector instanceof Hobo ) {
+	        this.forEach(function ( node ) {
+	            var push = true;
+
+	            selector.forEach(function ( elem ) {
+	                if ( node === elem ) {
+	                    push = false;
+	                }
+	            });
+
+	            if ( push ) {
+	                ret.push( node );
+	            }
+	        });
+
+	    } else {
+	        this.forEach(function ( node ) {
+	            if ( !matchElement( node, selector ) ) {
+	                ret.push( node );
+	            }
+	        });
+	    }
+
+	    return new Hobo( ret, this._context );
+	};
+
+/***/ },
+/* 7 */
 /***/ function(module, exports) {
 
 	/**
@@ -418,10 +520,10 @@
 	};
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__( 3 );
+	var utils = __webpack_require__( 2 );
 
 
 	/**
@@ -446,18 +548,18 @@
 	    if ( typeof key === "object" ) {
 	        obj = key;
 
-	        this._nodeList.forEach( utils.storeData.bind( this, obj ) );
+	        this.forEach( utils.storeData.bind( this, obj ) );
 
 	    // Storing data as a `key:value` pair
 	    } else if ( value ) {
 	        obj = {};
 	        obj[ key ] = value;
 
-	        this._nodeList.forEach( utils.storeData.bind( this, obj ) );
+	        this.forEach( utils.storeData.bind( this, obj ) );
 
 	    // Accessing data by `key`
 	    } else if ( key ) {
-	        this._nodeList.forEach((function ( node ) {
+	        this.forEach((function ( node ) {
 	            if ( obj !== null ) {
 	                return;
 	            }
@@ -478,7 +580,7 @@
 	    } else {
 	        obj = {};
 
-	        this._nodeList.forEach( utils.mergeData.bind( this, obj ) );
+	        this.forEach( utils.mergeData.bind( this, obj ) );
 
 	        ret = obj;
 	    }
@@ -487,11 +589,11 @@
 	};
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
-	    utils = __webpack_require__( 3 );
+	    utils = __webpack_require__( 2 );
 
 
 	/**
@@ -510,10 +612,10 @@
 	    // If we are `finding` within a multi-node collection...
 	    // Here its probably faster to grab the nodes within each Node
 	    // and then just let the context be the document for the new instance. 
-	    if ( this._nodeList.length > 1 ) {
+	    if ( this.length > 1 ) {
 	        ret = [];
 
-	        this._nodeList.forEach(function ( node ) {
+	        this.forEach(function ( node ) {
 	            ret = ret.concat( utils.makeArray( node.querySelectorAll( selector ) ) );
 	        });
 
@@ -521,14 +623,96 @@
 
 	    // Otherwise we can assume to use our single node as context
 	    } else {
-	        ret = new Hobo( selector, this._nodeList[ 0 ] );
+	        ret = new Hobo( selector, this[ 0 ] );
 	    }
 
 	    return ret;
 	};
 
 /***/ },
-/* 8 */
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Hobo = __webpack_require__( 1 ),
+	    matchElement = __webpack_require__( 4 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method parent
+	 * @description Get a Hobo instance of the parent node of this instance.
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( selector ) {
+	    var filtered = [];
+
+	    this.forEach(function ( node ) {
+	        if ( matchElement( node, selector ) ) {
+	            filtered.push( node );
+	        }
+	    });
+
+	    return new Hobo( filtered, null );
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	/**
+	 *
+	 * @public
+	 * @method detach
+	 * @description Detach the nodes from the DOM
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function () {
+	    this.forEach(function ( node ) {
+	        node.parentNode.removeChild( node );
+	    });
+
+	    return this;
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Hobo = __webpack_require__( 1 );
+
+
+	/**
+	 *
+	 * @public
+	 * @method append
+	 * @param {mixed} appendage What to append? Hobo, Element...
+	 * @description Append the nodes to the DOM
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( appendage ) {
+	    this.forEach(function ( node ) {
+	        // Hobo instance OR Array OR Array-like object with forEach
+	        if ( appendage instanceof Hobo || (appendage.length && typeof appendage.forEach === "function") ) {
+	            appendage.forEach(function ( append ) {
+	                if ( append.nodeType ) {
+	                    node.appendChild( append );
+	                }
+	            });
+
+	        } else if ( appendage.nodeType ) {
+	            node.appendChild( appendage );
+	        }
+	    });
+
+	    return this;
+	};
+
+/***/ },
+/* 13 */
 /***/ function(module, exports) {
 
 	/**
@@ -541,7 +725,7 @@
 	 *
 	 */
 	module.exports = function ( classes ) {
-	    this._nodeList.forEach(function ( element ) {
+	    this.forEach(function ( element ) {
 	        var newClass = classes.split( " " ),
 	            elsClass = element.className.split( " " );
 
@@ -558,7 +742,7 @@
 	};
 
 /***/ },
-/* 9 */
+/* 14 */
 /***/ function(module, exports) {
 
 	/**
@@ -571,7 +755,7 @@
 	 *
 	 */
 	module.exports = function ( classes ) {
-	    this._nodeList.forEach(function ( element ) {
+	    this.forEach(function ( element ) {
 	        var oldClass = classes.split( " " ),
 	            elsClass = element.className.split( " " );
 
@@ -588,10 +772,10 @@
 	};
 
 /***/ },
-/* 10 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__( 3 );
+	var utils = __webpack_require__( 2 );
 
 
 	/**
@@ -648,7 +832,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/**

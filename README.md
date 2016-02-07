@@ -74,39 +74,46 @@ hobo.promise(function ( resolve, reject ) {
 
 
 ## Hobo Methods
+- eq()
 - on()
 - off()
+- not()
 - find()
 - data()
+- filter()
+- detach()
+- append()
 - addClass()
 - removeClass()
-
-
 
 ## Hobo Utility Methods
 - ajax()
 - promise()
+
+### Native Array Methods
+- map()
+- push()
+- splice()
+- forEach()
 
 
 
 ## Hobo Consideration Methods
 These are methods that can make jQuery powerful. They are not included in hobo core. Use `hobo-extended.js` to include these.
 
-- [eq()](https://github.com/ProperJS/hobo/blob/master/lib/extended/eq.js)
 - [map()](https://github.com/ProperJS/hobo/blob/master/lib/extended/map.js)
 - [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
 - [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
 - [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
-- [filter()](https://github.com/ProperJS/hobo/blob/master/lib/extended/filter.js)
 - append()
 - remove()
-- detach()
 - trigger()
 - prepend()
 - closest()
 - appendTo()
 - children()
 - prependTo()
+- removeAttr()
 - toggleClass()
 - insertAfter()
 - insertBefore()
