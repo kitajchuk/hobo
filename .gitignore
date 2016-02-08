@@ -2,5 +2,5 @@
 .notes
 node_modules
 npm-debug.log
-dist/hobo-ext*
+dist
 build
