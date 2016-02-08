@@ -15,12 +15,14 @@ var Build = function ( modules ) {
 
     var hoboExt = [];
 
+    hoboF = hoboF.replace( /\.\/lib/g, "../lib" );
+
     modules.forEach(function ( module ) {
         if ( hoboExt.length ) {
-            hoboExt.push( '    Hobo.prototype.' + module + ' = require( "./lib/extended/' + module + '" );' );
+            hoboExt.push( '    Hobo.prototype.' + module + ' = require( "../lib/extended/' + module + '" );' );
 
         } else {
-            hoboExt.push( 'Hobo.prototype.' + module + ' = require( "./lib/extended/' + module + '" );' );
+            hoboExt.push( 'Hobo.prototype.' + module + ' = require( "../lib/extended/' + module + '" );' );
         }
     });
 
