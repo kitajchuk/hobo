@@ -9,6 +9,7 @@ var Build = function ( modules ) {
         console.log( "[Build]", "No modules specified -- generating hobo core." );
         child_process.exec( "rm -rf dist/hobo-ext.js", [], function ( error, stout, sterr ) {});
         child_process.exec( "rm -rf dist/hobo-ext.min.js", [], function ( error, stout, sterr ) {});
+        child_process.exec( "rm -rf build", [], function ( error, stout, sterr ) {});
         process.exit( 0 );
     }
 
@@ -26,15 +27,17 @@ var Build = function ( modules ) {
     hoboF = hoboF.replace( coreR, hoboExt.join( "\n" ) );
     hoboF = hoboF.replace( buildR, (buildR + " -- " + modules.join( " " )) );
 
-    fs.writeFileSync( path.join( __dirname, "hobo-ext.js" ), hoboF );
+    if ( !fs.existsSync( path.join( __dirname, "build" ) ) ) {
+        fs.mkdirSync( path.join( __dirname, "build" ) );
+    }
+
+    fs.writeFileSync( path.join( __dirname, "build", "hobo-ext.js" ), hoboF );
 
     child_process.exec( "npm run dist", [], function ( error, stout, sterr ) {
         if ( error ) {
             console.log( "[Build Error]", error );
             process.exit( 1 );
         }
-
-        child_process.exec( "rm -rf hobo-ext.js", [], function ( error, stout, sterr ) {});
     });
 };
 
