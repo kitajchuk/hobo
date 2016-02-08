@@ -150,4 +150,9 @@ The linked methods are currently available. All others are still empty and under
 
 
 ## Testing / Support
-Hobo is not fully tested - but its built for all modern browsers. Submit an [Issue]() or [Pull Request]() if you find any bugs.
+Hobo is not fully tested - but its built for all modern browsers. A couple of things, though. Hobo uses Native Promises - so IE will need a polyfill. Hobo also uses Native DomStringMap to check initial node data - so low grade IE won't work here either.
+
+- http://caniuse.com/#search=Promises
+- http://caniuse.com/#search=DomStringMap
+
+Submit an [Issue](https://github.com/ProperJS/hobo/issues) or [Pull Request](https://github.com/ProperJS/hobo/pulls) if you find any bugs.
