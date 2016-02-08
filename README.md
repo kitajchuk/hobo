@@ -113,10 +113,10 @@ npm run build -- "eq not filter detach append"
 ```
 
 #### Import Hobo
-The custom build files are generated at `dist/hobo-ext.js` and `dist/hobo-ext.min.js`. The build you can import directly into your project is generated at `build/hobo-ext.js`.
+The custom build you can import directly into your project is generated at `dist/hobo.js`.
 
 ```javascript
-import $ from "hobo/build/hobo-ext";
+import $ from "hobo/dist/hobo";
 ```
 
 

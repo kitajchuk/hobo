@@ -27,18 +27,11 @@ var Build = function ( modules ) {
     hoboF = hoboF.replace( coreR, hoboExt.join( "\n" ) );
     hoboF = hoboF.replace( buildR, (buildR + " -- " + modules.join( " " )) );
 
-    if ( !fs.existsSync( path.join( __dirname, "build" ) ) ) {
-        fs.mkdirSync( path.join( __dirname, "build" ) );
+    if ( !fs.existsSync( path.join( __dirname, "dist" ) ) ) {
+        fs.mkdirSync( path.join( __dirname, "dist" ) );
     }
 
-    fs.writeFileSync( path.join( __dirname, "build", "hobo-ext.js" ), hoboF );
-
-    child_process.exec( "npm run dist", [], function ( error, stout, sterr ) {
-        if ( error ) {
-            console.log( "[Build Error]", error );
-            process.exit( 1 );
-        }
-    });
+    fs.writeFileSync( path.join( __dirname, "dist", "hobo.js" ), hoboF );
 };
 
 

@@ -27,9 +27,7 @@
   ],
   "main": "hobo",
   "scripts": {
-    "build": "node build.js",
-    "dist": "webpack hobo.js dist/hobo.js ; webpack build/hobo.js dist/hobo-ext.js",
-    "postdist": "uglifyjs --compress --mangle --output dist/hobo.min.js dist/hobo.js ; uglifyjs --compress --mangle --output dist/hobo-ext.min.js dist/hobo-ext.js"
+    "build": "node build.js"
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"
