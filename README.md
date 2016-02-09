@@ -121,7 +121,7 @@ import $ from "hobo/dist/hobo";
 
 
 
-### Hobo Extended Methods
+### Hobo Custom Build Methods
 The linked methods are currently available. All others are still empty and under consideration.
 
 - [eq()](https://github.com/ProperJS/hobo/blob/master/lib/extended/eq.js)
@@ -135,11 +135,11 @@ The linked methods are currently available. All others are still empty and under
 - [filter()](https://github.com/ProperJS/hobo/blob/master/lib/extended/filter.js)
 - [detach()](https://github.com/ProperJS/hobo/blob/master/lib/extended/detach.js)
 - [append()](https://github.com/ProperJS/hobo/blob/master/lib/extended/append.js)
-- remove()
+- [remove()](https://github.com/ProperJS/hobo/blob/master/lib/extended/remove.js)
 - trigger()
 - prepend()
 - closest()
-- children()
+- [children()](https://github.com/ProperJS/hobo/blob/master/lib/extended/children.js)
 - removeAttr()
 - toggleClass()
 - insertAfter()
