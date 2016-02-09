@@ -27,6 +27,7 @@
   ],
   "main": "hobo",
   "scripts": {
+    "doc": "jsdoc lib/ -r -R README.md -P package.json -t node_modules/jsdoc-oblivion/template -c node_modules/jsdoc-oblivion/template/jsdoc.conf.json -d docs",
     "build": "node build.js"
   },
   "dependencies": {
@@ -45,8 +46,7 @@
     "dom"
   ],
   "devDependencies": {
-    "chokidar-cli": "^1.1.1",
-    "parallelshell": "^2.0.0",
-    "uglifyjs": "^2.4.10"
+    "jsdoc": "^3.4.0",
+    "jsdoc-oblivion": "0.0.4"
   }
 }
