@@ -1,7 +1,7 @@
 hobo
 ====
 
-> All the things you want without all the cruft.
+> A very small, modular DOM utility for modern web apps.
 
 
 

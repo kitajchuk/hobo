@@ -1,7 +1,7 @@
 {
   "title": "hobo",
   "name": "properjs-hobo",
-  "description": "All the things you want without all the cruft.",
+  "description": "A very small, modular DOM utility for modern web apps.",
   "version": "0.2.2",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
