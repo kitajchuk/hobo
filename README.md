@@ -89,7 +89,7 @@ $.promise(function ( resolve, reject ) {
 ## Native Array Methods
 - map()
 - push()
-- forEach()
+- forEach() - alias available as each()
 
 
 
@@ -124,23 +124,26 @@ import $ from "hobo/dist/hobo";
 ### Hobo Custom Build Methods
 The linked methods are currently available. All others are still empty and under consideration.
 
+- [is()](https://github.com/ProperJS/hobo/blob/master/lib/extended/is.js)
 - [eq()](https://github.com/ProperJS/hobo/blob/master/lib/extended/eq.js)
 - [not()](https://github.com/ProperJS/hobo/blob/master/lib/extended/not.js)
-- one()
+- [one()](https://github.com/ProperJS/hobo/blob/master/lib/extended/one.js)
 - next()
 - prev()
 - [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
+- last()
+- first()
 - [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
 - [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
 - [filter()](https://github.com/ProperJS/hobo/blob/master/lib/extended/filter.js)
 - [detach()](https://github.com/ProperJS/hobo/blob/master/lib/extended/detach.js)
 - [append()](https://github.com/ProperJS/hobo/blob/master/lib/extended/append.js)
 - [remove()](https://github.com/ProperJS/hobo/blob/master/lib/extended/remove.js)
-- trigger()
-- prepend()
-- closest()
+- [trigger()](https://github.com/ProperJS/hobo/blob/master/lib/extended/trigger.js)
+- [prepend()](https://github.com/ProperJS/hobo/blob/master/lib/extended/prepend.js)
+- [closest()](https://github.com/ProperJS/hobo/blob/master/lib/extended/closest.js)
 - [children()](https://github.com/ProperJS/hobo/blob/master/lib/extended/children.js)
-- removeAttr()
+- [removeAttr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/removeAttr.js)
 - toggleClass()
 - insertAfter()
 - insertBefore()

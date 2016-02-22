@@ -28,10 +28,11 @@
   "main": "hobo",
   "scripts": {
     "doc": "jsdoc lib/ -r -R README.md -P package.json -t node_modules/jsdoc-oblivion/template -c node_modules/jsdoc-oblivion/template/jsdoc.conf.json -d docs",
-    "test": "npm run build -- 'append attr children closest detach eq filter index insertAfter insertBefore not parent prepend remove toggleClass trigger'",
+    "test": "npm run build -- 'is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass insertAfter insertBefore'",
     "posttest": "webpack test/test.js test/test-dist.js",
     "build": "node build.js",
-    "watch": "chokidar ./test/test.js --initial -d 10 -c 'npm run test'"
+    "watch": "chokidar ./test/test.js --initial -d 10 -c 'npm run test'",
+    "start": "npm run watch"
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"
