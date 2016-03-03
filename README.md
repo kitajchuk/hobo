@@ -57,13 +57,19 @@ $.ajax({
     dataType: "json",
 
     // The request method type, "POST" etc...
-    method: "GET"
+    method: "GET",
 
-}).then(function ( value ) {
+    // This is how you would utilize JSONP
+    // dataType: "jsonp"
+
+    // This sets the JSONP callback function name, the default is "callback"
+    // jsonp: "someCallbackName"
+
+}).then(function ( response ) {
     // Success with response
 
-}).catch(function ( reason ) {
-    // Failure with reason Error
+}).catch(function ( error ) {
+    // Failure with error
 })
 
 
