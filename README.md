@@ -144,7 +144,7 @@ The linked methods are currently available. All others are still empty and under
 - [closest()](https://github.com/ProperJS/hobo/blob/master/lib/extended/closest.js)
 - [children()](https://github.com/ProperJS/hobo/blob/master/lib/extended/children.js)
 - [removeAttr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/removeAttr.js)
-- toggleClass()
+- [toggleClass()](https://github.com/ProperJS/hobo/blob/master/lib/extended/toggleClass.js)
 - insertAfter()
 - insertBefore()
 
