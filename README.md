@@ -152,9 +152,14 @@ $.ajax({
 
 
 ## Testing / Support
-Hobo is not fully tested - but its built for all modern browsers. A couple of things, though. Hobo uses Native Promises - so IE will need a polyfill. Hobo also uses Native DomStringMap to check initial node data - so low grade IE won't work here either.
+Hobo uses Native [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise). You'll need a polyfill for IE if you're not already working with one. The [es6-promise](https://github.com/stefanpenner/es6-promise) looks promising.
+
+Hobo also uses Native [DomStringMap](https://developer.mozilla.org/en-US/docs/Web/API/DOMStringMap) with a fallback to [NamedNodeMap](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap).
+
+Hobo is tested in Chrome 48.0.2564.116+, Firefox 44.0.2+, Safari 9.0.3+, IE 10+, iOS Mobile Safari, Android
 
 - http://caniuse.com/#search=Promises
 - http://caniuse.com/#search=DomStringMap
+- http://caniuse.com/#search=NamedNodeMap
 
 Submit an [Issue](https://github.com/ProperJS/hobo/issues) or [Pull Request](https://github.com/ProperJS/hobo/pulls) if you find any bugs.

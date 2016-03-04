@@ -195,12 +195,13 @@
 	    this.length = selector.length;
 
 	    // Hobo elements?
-	    for ( var i = this.length; i--; ) {
-	        this[ i ] = selector[ i ];
-	    }
+	    selector.forEach(function ( node ) {
+	        this.push( node );
+	    });
 
-	    // This performs an initial mapping of each node's DOMStringMap to its `hoboDataMap`
-	    this.forEach( utils.mapDataset.bind( this ) );
+	    // Initial mapping of each nodes data.
+	    // Transfer {DOMStringMap} => {hoboDataMap}
+	    this.forEach( utils.makeData );
 	};
 
 
@@ -260,7 +261,7 @@
 	 *
 	 *
 	 */
-	var version = "0.3.1",
+	var version = "0.3.2",
 
 
 	    rData = /^data-/,
@@ -306,41 +307,38 @@
 	    },
 
 
-	    // Since DOMStringMap camel-cases data-attr's,
-	    // All data mapped through Hobo must camel-case as well.
-	    mapDataset = function ( node ) {
+	    makeData = function ( node ) {
 	        if ( !node.hoboDataMap ) {
 	            node.hoboDataMap = {};
 	        }
 
-	        for ( var i in node.dataset ) {
-	            if ( node.dataset.hasOwnProperty( i ) ) {
-	                // Dataset keys will already be camel-cased
-	                var store = node.dataset[ i ];
+	        if ( node.dataset ) {
+	            _mapDataset( node );
 
-	                if ( rJson.test( store ) ) {
-	                    try {
-	                        store = JSON.parse( store );
-
-	                    } catch ( error ) {
-	                        throw error;
-	                    }
-	                }
-
-	                node.hoboDataMap[ i ] = store;
-	            }
+	        } else if ( node.attributes ) {
+	            _mapAttributes( node );
 	        }
 	    },
 
 
 	    storeData = function ( data, node ) {
-	        var id;
+	        var id,
+	            i;
 
-	        for ( var i in data ) {
+	        for ( i in data ) {
 	            if ( data.hasOwnProperty( i ) ) {
 	                id = camelCase( i );
 
 	                node.hoboDataMap[ id ] = data[ i ];
+	            }
+	        }
+	    },
+
+
+	    mergeData = function ( data, node ) {
+	        for ( var i in node.hoboDataMap ) {
+	            if ( node.hoboDataMap.hasOwnProperty( i ) && !data[ i ] ) {
+	                data[ i ] = node.hoboDataMap[ i ];
 	            }
 	        }
 	    },
@@ -360,15 +358,6 @@
 	    },
 
 
-	    mergeData = function ( data, node ) {
-	        for ( var i in node.hoboDataMap ) {
-	            if ( node.hoboDataMap.hasOwnProperty( i ) && !data[ i ] ) {
-	                data[ i ] = node.hoboDataMap[ i ];
-	            }
-	        }
-	    },
-
-
 	    removeData = function ( key, node ) {
 	        // All data mapped into Hobo will be camel-cased
 	        key = camelCase( key );
@@ -382,9 +371,10 @@
 	    serializeData = function ( data, prefix ) {
 	        var str = [],
 	            key,
-	            val;
+	            val,
+	            i;
 
-	        for ( var i in data ) {
+	        for ( i in data ) {
 	            if ( data.hasOwnProperty( i ) ) {
 	                key = prefix ? (prefix + "[" + i + "]") : i;
 	                val = data[ i ];
@@ -399,6 +389,49 @@
 	        }
 
 	        return str.join( "&" );
+	    },
+
+
+	    // DOMStringMap camel-cases data- attributes.
+	    // NamedNodeMap is a fallback which supports IE 10.
+	    // Data mapped through Hobo must camel-case as well.
+
+
+	    _getDataValue = function ( data ) {
+	        if ( rJson.test( data ) ) {
+	            try {
+	                data = JSON.parse( data );
+
+	            } catch ( error ) {
+	                throw error;
+	            }
+	        }
+
+	        return data;
+	    },
+
+
+	    // Use {NamedNodeMap}
+	    _mapAttributes = function ( node ) {
+	        var i = node.attributes.length;
+
+	        for ( i; i--; ) {
+	            if ( rData.test( node.attributes[ i ].name ) ) {
+	                var key = camelCase( node.attributes[ i ].name.replace( rData, "" ) );
+
+	                node.hoboDataMap[ key ] = _getDataValue( node.attributes[ i ].value );
+	            }
+	        }
+	    },
+
+
+	    // Use {DOMStringMap}
+	    _mapDataset = function ( node ) {
+	        for ( var i in node.dataset ) {
+	            if ( node.dataset.hasOwnProperty( i ) ) {
+	                node.hoboDataMap[ i ] = store;
+	            }
+	        }
 	    };
 
 
@@ -414,7 +447,7 @@
 	    camelCase: camelCase,
 	    makeId: makeId,
 	    makeArray: makeArray,
-	    mapDataset: mapDataset,
+	    makeData: makeData,
 	    storeData: storeData,
 	    retrieveData: retrieveData,
 	    mergeData: mergeData,
@@ -443,7 +476,8 @@
 	 *
 	 */
 	module.exports = function ( event, selector, callback ) {
-	    var nativeEvent = event;
+	    var nativeEvent = event,
+	        self = this;
 
 	    // Normalize `selector` for event delegation
 	    // Normalize `callback` in case no delegate selector was passed
@@ -457,28 +491,28 @@
 	        this._events[ event ] = {};
 	    }
 
-	    this.forEach((function ( node ) {
+	    this.forEach(function ( node ) {
 	        // Unique ID for each node event
-	        var eventId = (utils.makeId() + "EVENT");
+	        var eventId = (utils.makeId() + "EVENT"),
 
-	        // Normalize event handler with a small wrapper function
-	        var handler = function ( e ) {
-	            // Default context is `this` element
-	            var context = (selector ? matchElement( e.target, selector, true ) : this);
+	            // Normalize event handler with a small wrapper function
+	            handler = function ( e ) {
+	                // Default context is `this` element
+	                var context = (selector ? matchElement( e.target, selector, true ) : this);
 
-	            // Handle `mouseenter` and `mouseleave`
-	            if ( event === "mouseenter" || event === "mouseleave" ) {
-	                var relatedElement = (event === "mouseenter" ? e.fromElement : e.toElement);
+	                // Handle `mouseenter` and `mouseleave`
+	                if ( event === "mouseenter" || event === "mouseleave" ) {
+	                    var relatedElement = (event === "mouseenter" ? e.fromElement : e.toElement);
 
-	                if ( context && ( relatedElement !== context && !context.contains( relatedElement ) ) ) {
+	                    if ( context && ( relatedElement !== context && !context.contains( relatedElement ) ) ) {
+	                        callback.call( context, e );
+	                    }
+
+	                // Fire callback if context element
+	                } else if ( context ) {
 	                    callback.call( context, e );
 	                }
-
-	            // Fire callback if context element
-	            } else if ( context ) {
-	                callback.call( context, e );
-	            }
-	        };
+	            };
 
 	        // Support `mouseenter` and `mouseleave`
 	        if ( event === "mouseenter" ) {
@@ -489,7 +523,7 @@
 	        }
 
 	        // Each handler/callback pair gets stored in an `events` index
-	        this._events[ event ][ eventId ] = {
+	        self._events[ event ][ eventId ] = {
 	            id: eventId,
 	            type: nativeEvent,
 	            node: node,
@@ -498,9 +532,7 @@
 	        };
 
 	        node.addEventListener( nativeEvent, handler, false );
-
-	    // Bind @this hobo context
-	    }).bind( this ));
+	    });
 
 	    return this;
 	};
@@ -583,62 +615,62 @@
 	 *
 	 */
 	module.exports = function ( event, callback ) {
-	    var type,
+	    var self = this,
+	        type,
 	        evo,
 	        id;
 
-	    this.forEach((function ( node ) {
+	    this.forEach(function ( node ) {
 	        // Remove a single handler for an event type
 	        if ( callback ) {
-	            for ( id in this._events[ event ] ) {
+	            for ( id in self._events[ event ] ) {
 	                if ( this._events[ event ].hasOwnProperty( id ) ) {
-	                    evo = this._events[ event ][ id ];
+	                    evo = self._events[ event ][ id ];
 
 	                    // Match the nodes, Match the callback
 	                    if ( evo.node === node && evo.callback === callback ) {
 	                        node.removeEventListener( evo.type, evo.handler, false );
 
-	                        delete this._events[ event ][ id ];
+	                        delete self._events[ event ][ id ];
 	                    }
 	                }
 	            }
 
 	        // Remove all handlers for an event type
 	        } else if ( event ) {
-	            for ( id in this._events[ event ] ) {
-	                if ( this._events[ event ].hasOwnProperty( id ) ) {
-	                    evo = this._events[ event ][ id ];
+	            for ( id in self._events[ event ] ) {
+	                if ( self._events[ event ].hasOwnProperty( id ) ) {
+	                    evo = self._events[ event ][ id ];
 
 	                    // Match the nodes
 	                    if ( evo.node === node ) {
 	                        node.removeEventListener( evo.type, evo.handler, false );
 
-	                        delete this._events[ event ][ id ];
+	                        delete self._events[ event ][ id ];
 	                    }
 	                }
 	            }
 
 	        // Remove all handlers for all event types
 	        } else {
-	            for ( type in this._events ) {
-	                if ( this._events.hasOwnProperty( type ) ) {
-	                    for ( id in this._events[ type ] ) {
-	                        if ( this._events[ type ].hasOwnProperty( id ) ) {
-	                            evo = this._events[ type ][ id ];
+	            for ( type in self._events ) {
+	                if ( self._events.hasOwnProperty( type ) ) {
+	                    for ( id in self._events[ type ] ) {
+	                        if ( self._events[ type ].hasOwnProperty( id ) ) {
+	                            evo = self._events[ type ][ id ];
 
 	                            // Match the nodes
 	                            if ( evo.node === node ) {
 	                                node.removeEventListener( evo.type, evo.handler, false );
 
-	                                delete this._events[ type ][ id ];
+	                                delete self._events[ type ][ id ];
 	                            }
 	                        }
 	                    }
 	                }
 	            }
 	        }
-
-	    }).bind( this ));
+	    });
 
 	    return this;
 	};
@@ -672,25 +704,29 @@
 	    if ( typeof key === "object" ) {
 	        obj = key;
 
-	        this.forEach( utils.storeData.bind( this, obj ) );
+	        this.forEach(function ( node ) {
+	            utils.storeData( obj, node );
+	        });
 
 	    // Storing data as a `key:value` pair
 	    } else if ( value ) {
 	        obj = {};
 	        obj[ key ] = value;
 
-	        this.forEach( utils.storeData.bind( this, obj ) );
+	        this.forEach(function ( node ) {
+	            utils.storeData( obj, node );
+	        });
 
 	    // Accessing data by `key`
 	    } else if ( key ) {
-	        this.forEach((function ( node ) {
+	        this.forEach(function ( node ) {
 	            if ( obj !== null ) {
 	                return;
 	            }
 
 	            obj = utils.retrieveData( key, node );
 
-	        }).bind( this ));
+	        });
 
 	        ret = obj;
 
@@ -700,7 +736,9 @@
 	        obj = {};
 
 	        // Object is mutated here by `mergeData`
-	        this.forEach( utils.mergeData.bind( this, obj ) );
+	        this.forEach(function ( node ) {
+	            utils.mergeData( obj, node );
+	        });
 
 	        ret = obj;
 	    }
