@@ -2,7 +2,7 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
@@ -26,12 +26,17 @@
     }
   ],
   "main": "hobo",
+  "config": {
+    "build_all": "is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass"
+  },
   "scripts": {
     "doc": "jsdoc lib/ -r -R README.md -P package.json -t node_modules/jsdoc-oblivion/template -c node_modules/jsdoc-oblivion/template/jsdoc.conf.json -d docs",
-    "test": "npm run build -- 'is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass insertAfter insertBefore'",
+    "min": "uglifyjs dist/hobo.build.dist.js -c -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c -m -o dist/hobo.dist.min.js",
+    "test": "npm run build -- '$npm_package_config_build_all'",
     "posttest": "webpack test/test.js test/test-dist.js",
     "build": "node build.js",
-    "watch": "chokidar ./test/test.js --initial -d 10 -c 'npm run test'",
+    "postbuild": "webpack dist/hobo.build.js dist/hobo.build.dist.js && webpack hobo.js dist/hobo.dist.js && npm run min && npm run doc",
+    "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run test'",
     "start": "npm run watch"
   },
   "dependencies": {
@@ -50,8 +55,9 @@
     "dom"
   ],
   "devDependencies": {
+    "chokidar-cli": "^1.0.1",
     "jsdoc": "^3.4.0",
     "jsdoc-oblivion": "0.0.4",
-    "chokidar-cli": "^1.0.1"
+    "uglifyjs": "^2.4.10"
   }
 }

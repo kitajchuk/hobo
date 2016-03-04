@@ -2,6 +2,6 @@
 .notes
 node_modules
 npm-debug.log
-dist
+#dist
 docs
 test

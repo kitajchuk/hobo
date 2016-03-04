@@ -1,18 +1,92 @@
-hobo
-====
+hobo.js
+=======
 
 > A very small, modular DOM utility for modern web apps.
 
 
 
-## Installation
+## About
+Hobo core is only 6k minified and just 10k minified with all extended methods built in!
 
+
+
+## Usage
+
+### Core
+If you only want to use core you can simply `npm install` and import hobo into your application.
 ```shell
 npm install properjs-hobo --save-dev
 ```
 
+### Custom Builds
+You can create custom hobo builds with any of the available extended methods.
 
-## Usage
+#### Clone
+```shell
+git clone git@github.com:ProperJS/hobo.git hobo
+```
+
+#### Build
+```shell
+cd hobo
+
+# This will include these methods
+npm run build -- "eq not filter detach append"
+```
+
+#### Import
+```javascript
+import $ from "hobo/dist/hobo.build";
+```
+
+
+
+## Methods
+
+### Core
+The small, powerful core methods that get the job done.
+- on() - supports `mouseenter` and `mouseleave`
+- off()
+- find()
+- data()
+- ajax() - supports `xhr` and `jsonp`
+- addClass()
+- removeClass()
+
+### Core - Native Array
+These are swiped from the Array prototype for zero overhead.
+- map()
+- push()
+- forEach() - alias available as `each()`
+
+### Extended
+These are methods that can make hobo even more powerful.
+- is()
+- eq()
+- not()
+- one()
+- next()
+- prev()
+- attr()
+- last()
+- first()
+- index()
+- parent()
+- filter()
+- detach()
+- append()
+- remove()
+- trigger()
+- prepend()
+- closest()
+- children()
+- removeAttr()
+- toggleClass()
+
+
+
+## API
+If you are familiar with libraries like jQuery then hobo will be real easy.
 ```javascript
 import $ from "properjs-hobo";
 
@@ -70,89 +144,8 @@ $.ajax({
 
 }).catch(function ( error ) {
     // Failure with error
-})
-
-
-$.promise(function ( resolve, reject ) {
-    // Handle promise here
 });
 ```
-
-
-
-## Hobo Methods
-- on()
-- off()
-- find()
-- data()
-- addClass()
-- removeClass()
-
-## Hobo Utility Methods
-- ajax()
-- promise()
-
-## Native Array Methods
-- map()
-- push()
-- forEach() - alias available as each()
-
-
-
-## Hobo Custom Builds
-These are methods that can make Hobo more powerful. Hobo takes an additive approach, whereas something like jQuery is subtractive for custom builds. Hobo presents the bare minimum - then you can add extra methods that suit your style.
-
-
-### Generate a custom build
-
-#### Clone Hobo
-```shell
-git clone git@github.com:ProperJS/hobo.git hobo
-```
-
-#### Build Hobo
-```shell
-cd hobo
-
-# This will include these methods
-npm run build -- "eq not filter detach append"
-```
-
-#### Import Hobo
-The custom build you can import directly into your project is generated at `dist/hobo.js`.
-
-```javascript
-import $ from "hobo/dist/hobo";
-```
-
-
-
-### Hobo Custom Build Methods
-The linked methods are currently available. All others are still empty and under consideration.
-
-- [is()](https://github.com/ProperJS/hobo/blob/master/lib/extended/is.js)
-- [eq()](https://github.com/ProperJS/hobo/blob/master/lib/extended/eq.js)
-- [not()](https://github.com/ProperJS/hobo/blob/master/lib/extended/not.js)
-- [one()](https://github.com/ProperJS/hobo/blob/master/lib/extended/one.js)
-- [next()](https://github.com/ProperJS/hobo/blob/master/lib/extended/next.js)
-- [prev()](https://github.com/ProperJS/hobo/blob/master/lib/extended/prev.js)
-- [attr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/attr.js)
-- [last()](https://github.com/ProperJS/hobo/blob/master/lib/extended/last.js)
-- [first()](https://github.com/ProperJS/hobo/blob/master/lib/extended/first.js)
-- [index()](https://github.com/ProperJS/hobo/blob/master/lib/extended/index.js)
-- [parent()](https://github.com/ProperJS/hobo/blob/master/lib/extended/parent.js)
-- [filter()](https://github.com/ProperJS/hobo/blob/master/lib/extended/filter.js)
-- [detach()](https://github.com/ProperJS/hobo/blob/master/lib/extended/detach.js)
-- [append()](https://github.com/ProperJS/hobo/blob/master/lib/extended/append.js)
-- [remove()](https://github.com/ProperJS/hobo/blob/master/lib/extended/remove.js)
-- [trigger()](https://github.com/ProperJS/hobo/blob/master/lib/extended/trigger.js)
-- [prepend()](https://github.com/ProperJS/hobo/blob/master/lib/extended/prepend.js)
-- [closest()](https://github.com/ProperJS/hobo/blob/master/lib/extended/closest.js)
-- [children()](https://github.com/ProperJS/hobo/blob/master/lib/extended/children.js)
-- [removeAttr()](https://github.com/ProperJS/hobo/blob/master/lib/extended/removeAttr.js)
-- [toggleClass()](https://github.com/ProperJS/hobo/blob/master/lib/extended/toggleClass.js)
-- insertAfter()
-- insertBefore()
 
 
 

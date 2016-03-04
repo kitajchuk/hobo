@@ -33,7 +33,7 @@ var Build = function ( modules ) {
         fs.mkdirSync( path.join( __dirname, "dist" ) );
     }
 
-    fs.writeFileSync( path.join( __dirname, "dist", "hobo.js" ), hoboF );
+    fs.writeFileSync( path.join( __dirname, "dist", "hobo.build.js" ), hoboF );
 
     console.log( "> [Hobo]", ("Generated custom build with -- " + modules.join( " " )) );
 };

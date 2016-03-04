@@ -62,7 +62,6 @@
 
     // Attach Hobo utilities to `wrapper` method
     hobo.ajax = require( "./lib/core/ajax" );
-    hobo.promise = require( "./lib/core/promise" );
 
 
     return hobo;
