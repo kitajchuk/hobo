@@ -30,6 +30,8 @@ git clone git@github.com:ProperJS/hobo.git hobo
 ```shell
 cd hobo
 
+npm install
+
 # This will include these methods
 npm run build -- "eq not filter detach append"
 ```
