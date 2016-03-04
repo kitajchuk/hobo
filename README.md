@@ -156,7 +156,7 @@ Hobo uses Native [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScr
 
 Hobo also uses Native [DomStringMap](https://developer.mozilla.org/en-US/docs/Web/API/DOMStringMap) with a fallback to [NamedNodeMap](https://developer.mozilla.org/en-US/docs/Web/API/NamedNodeMap).
 
-Hobo is tested in Chrome 48.0.2564.116+, Firefox 44.0.2+, Safari 9.0.3+, IE 10+, iOS Mobile Safari8.4+, Android4.4.4+
+Hobo is tested in Chrome 48.0.2564.116+, Firefox 44.0.2+, Safari 9.0.3+, IE 10+, iOS Mobile Safari 8.4+, Android 4.4.4+
 
 - http://caniuse.com/#search=Promises
 - http://caniuse.com/#search=DomStringMap
