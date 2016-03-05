@@ -127,19 +127,19 @@ $.ajax({
     url: "/some/endpoint",
 
     // Object hash to pass to endpoint
-    data: {},
+    data: {
+        foo: "bar",
+        baz: "bot
+    },
 
-    // This can be "html" or "json"
+    // This can be "html", "json" or "jsonp"
     dataType: "json",
 
     // The request method type, "POST" etc...
     method: "GET",
 
-    // This is how you would utilize JSONP
-    // dataType: "jsonp"
-
     // This sets the JSONP callback function name, the default is "callback"
-    // jsonp: "someCallbackName"
+    jsonp: "someCallbackName",
 
     // This is for passing headers
     headers: {
