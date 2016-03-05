@@ -141,6 +141,11 @@ $.ajax({
     // This sets the JSONP callback function name, the default is "callback"
     // jsonp: "someCallbackName"
 
+    // This is for passing headers
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
 }).then(function ( response ) {
     // Success with response
 
