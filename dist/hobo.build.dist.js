@@ -215,9 +215,9 @@
 	    this.length = selector.length;
 
 	    // Hobo elements?
-	    selector.forEach(function ( node ) {
-	        this.push( node );
-	    });
+	    for ( var i = this.length; i--; ) {
+	        this[ i ] = selector[ i ];
+	    }
 
 	    // Initial mapping of each nodes data.
 	    // Transfer {DOMStringMap} => {hoboDataMap}
@@ -281,7 +281,7 @@
 	 *
 	 *
 	 */
-	var version = "0.3.2",
+	var version = "0.3.5",
 
 
 	    rData = /^data-/,
@@ -449,7 +449,7 @@
 	    _mapDataset = function ( node ) {
 	        for ( var i in node.dataset ) {
 	            if ( node.dataset.hasOwnProperty( i ) ) {
-	                node.hoboDataMap[ i ] = store;
+	                node.hoboDataMap[ i ] = _getDataValue( node.dataset[ i ] );
 	            }
 	        }
 	    };
@@ -485,73 +485,96 @@
 
 	/**
 	 *
+	 * @private
+	 * @method bind
+	 * @description Bind a standard DOM Event.
+	 * @param {element} node
+	 * @param {string} event
+	 * @param {string} selector
+	 * @param {function} callback
+	 * @this {Hobo}
+	 *
+	 */
+	var bind = function ( node, event, selector, callback ) {
+	    // Unique ID for each node event
+	    var eventId = (utils.makeId() + "EVENT"),
+
+	        // The true event name
+	        eventType = event,
+
+	        // Normalize event handler with a small wrapper function
+	        eventHandler = function ( e ) {
+	            // Default context is `this` element
+	            var context = (selector ? matchElement( e.target, selector, true ) : this);
+
+	            // Handle `mouseenter` and `mouseleave`
+	            if ( event === "mouseenter" || event === "mouseleave" ) {
+	                var relatedElement = (event === "mouseenter" ? e.fromElement : e.toElement);
+
+	                if ( context && ( relatedElement !== context && !context.contains( relatedElement ) ) ) {
+	                    callback.call( context, e );
+	                }
+
+	            // Fire callback if context element
+	            } else if ( context ) {
+	                callback.call( context, e );
+	            }
+	        };
+
+	    // Support `mouseenter` and `mouseleave`
+	    if ( event === "mouseenter" ) {
+	        eventType = "mouseover";
+
+	    } else if ( event === "mouseleave" ) {
+	        eventType = "mouseout";
+	    }
+
+	    // Each handler/callback pair gets stored in an `events` index
+	    this._events[ event ][ eventId ] = {
+	        id: eventId,
+	        type: eventType,
+	        node: node,
+	        handler: eventHandler,
+	        callback: callback
+	    };
+
+	    node.addEventListener( eventType, eventHandler, false );
+	};
+
+
+	/**
+	 *
 	 * @instance
 	 * @memberof Hobo
 	 * @method on
 	 * @description Bind a standard DOM Event. Honor delegation as a primary.
-	 * @param {string} event 
+	 * @param {string} events 
 	 * @param {string} selector 
 	 * @param {function} callback
 	 * @returns {Hobo}
 	 *
 	 */
-	module.exports = function ( event, selector, callback ) {
-	    var nativeEvent = event,
-	        self = this;
+	module.exports = function ( events, selector, callback ) {
+	    var self = this;
 
-	    // Normalize `selector` for event delegation
-	    // Normalize `callback` in case no delegate selector was passed
+	    // Normalize `selector` and `callback`
 	    if ( !callback ) {
 	        callback = selector;
 	        selector = this._selector;
 	    }
 
-	    // Does this event type have an index yet
-	    if ( !this._events[ event ] ) {
-	        this._events[ event ] = {};
-	    }
-
-	    this.forEach(function ( node ) {
-	        // Unique ID for each node event
-	        var eventId = (utils.makeId() + "EVENT"),
-
-	            // Normalize event handler with a small wrapper function
-	            handler = function ( e ) {
-	                // Default context is `this` element
-	                var context = (selector ? matchElement( e.target, selector, true ) : this);
-
-	                // Handle `mouseenter` and `mouseleave`
-	                if ( event === "mouseenter" || event === "mouseleave" ) {
-	                    var relatedElement = (event === "mouseenter" ? e.fromElement : e.toElement);
-
-	                    if ( context && ( relatedElement !== context && !context.contains( relatedElement ) ) ) {
-	                        callback.call( context, e );
-	                    }
-
-	                // Fire callback if context element
-	                } else if ( context ) {
-	                    callback.call( context, e );
-	                }
-	            };
-
-	        // Support `mouseenter` and `mouseleave`
-	        if ( event === "mouseenter" ) {
-	            nativeEvent = "mouseover";
-
-	        } else if ( event === "mouseleave" ) {
-	            nativeEvent = "mouseout";
+	    // Iterate over event(s)
+	    // Space separated event list is supported
+	    // Example: "DOMMouseScroll mousewheel"
+	    events.split( " " ).forEach(function ( event ) {
+	        // Does this event type have an index yet
+	        if ( !self._events[ event ] ) {
+	            self._events[ event ] = {};
 	        }
 
-	        // Each handler/callback pair gets stored in an `events` index
-	        self._events[ event ][ eventId ] = {
-	            id: eventId,
-	            type: nativeEvent,
-	            node: node,
-	            handler: handler,
-	            callback: callback
-	        };
-
-	        node.addEventListener( nativeEvent, handler, false );
+	        self.forEach(function ( node ) {
+	            bind.call( self, node, event, selector, callback );
+	        });
 	    });
 
 	    return this;
@@ -625,71 +648,114 @@
 
 	/**
 	 *
-	 * @instance
-	 * @memberof Hobo
-	 * @method off
-	 * @description Un-Bind a standard DOM Event.
-	 * @param {string} event The event type
-	 * @param {function} callback The supplied callback
-	 * @returns {Hobo}
+	 * @private
+	 * @method unbind
+	 * @description Unbind a standard DOM Event.
+	 * @param {element} node
+	 * @param {string} event
+	 * @param {function} callback
+	 * @this {Hobo}
 	 *
 	 */
-	module.exports = function ( event, callback ) {
-	    var self = this,
-	        type,
+	var unbind = function ( node, event, callback ) {
+	    var type,
 	        evo,
 	        id;
 
-	    this.forEach(function ( node ) {
-	        // Remove a single handler for an event type
-	        if ( callback ) {
-	            for ( id in self._events[ event ] ) {
-	                if ( this._events[ event ].hasOwnProperty( id ) ) {
-	                    evo = self._events[ event ][ id ];
+	    // Remove a single handler for an event type
+	    if ( callback ) {
+	        for ( id in this._events[ event ] ) {
+	            if ( this._events[ event ].hasOwnProperty( id ) ) {
+	                evo = this._events[ event ][ id ];
 
-	                    // Match the nodes, Match the callback
-	                    if ( evo.node === node && evo.callback === callback ) {
-	                        node.removeEventListener( evo.type, evo.handler, false );
+	                // Match the nodes, Match the callback
+	                if ( evo.node === node && evo.callback === callback ) {
+	                    node.removeEventListener( evo.type, evo.handler, false );
 
-	                        delete self._events[ event ][ id ];
-	                    }
+	                    delete this._events[ event ][ id ];
 	                }
 	            }
+	        }
 
-	        // Remove all handlers for an event type
-	        } else if ( event ) {
-	            for ( id in self._events[ event ] ) {
-	                if ( self._events[ event ].hasOwnProperty( id ) ) {
-	                    evo = self._events[ event ][ id ];
+	    // Remove all handlers for an event type
+	    } else {
+	        for ( id in this._events[ event ] ) {
+	            if ( this._events[ event ].hasOwnProperty( id ) ) {
+	                evo = this._events[ event ][ id ];
+
+	                // Match the nodes
+	                if ( evo.node === node ) {
+	                    node.removeEventListener( evo.type, evo.handler, false );
+
+	                    delete this._events[ event ][ id ];
+	                }
+	            }
+	        }
+	    }
+	};
+
+
+	/**
+	 *
+	 * @private
+	 * @method teardown
+	 * @description Unbind all events for instance.
+	 * @param {element} node
+	 * @this {Hobo}
+	 *
+	 */
+	var teardown = function ( node ) {
+	    var type,
+	        evo,
+	        id;
+
+	    for ( type in this._events ) {
+	        if ( this._events.hasOwnProperty( type ) ) {
+	            for ( id in this._events[ type ] ) {
+	                if ( this._events[ type ].hasOwnProperty( id ) ) {
+	                    evo = this._events[ type ][ id ];
 
 	                    // Match the nodes
 	                    if ( evo.node === node ) {
 	                        node.removeEventListener( evo.type, evo.handler, false );
 
-	                        delete self._events[ event ][ id ];
-	                    }
-	                }
-	            }
-
-	        // Remove all handlers for all event types
-	        } else {
-	            for ( type in self._events ) {
-	                if ( self._events.hasOwnProperty( type ) ) {
-	                    for ( id in self._events[ type ] ) {
-	                        if ( self._events[ type ].hasOwnProperty( id ) ) {
-	                            evo = self._events[ type ][ id ];
-
-	                            // Match the nodes
-	                            if ( evo.node === node ) {
-	                                node.removeEventListener( evo.type, evo.handler, false );
-
-	                                delete self._events[ type ][ id ];
-	                            }
-	                        }
+	                        delete this._events[ type ][ id ];
 	                    }
 	                }
 	            }
 	        }
+	    }
+	};
+
+
+	/**
+	 *
+	 * @instance
+	 * @memberof Hobo
+	 * @method off
+	 * @description Un-Bind a standard DOM Event.
+	 * @param {string} events The event type
+	 * @param {function} callback The supplied callback
+	 * @returns {Hobo}
+	 *
+	 */
+	module.exports = function ( events, callback ) {
+	    var self = this;
+
+	    // Iterate over event(s)
+	    // Space separated event list is supported
+	    // Example: "DOMMouseScroll mousewheel"
+	    // off() can be called with no args, account for this and remove ALL events
+	    (events ? events.split( " " ) : [null]).forEach(function ( event ) {
+	        self.forEach(function ( node ) {
+	            // Explicit `null` check for teardown
+	            if ( event === null ) {
+	                teardown.call( self, node );
+
+	            } else {
+	                unbind.call( self, node, event, callback );
+	            }
+	        });
 	    });
 
 	    return this;
@@ -855,16 +921,24 @@
 	 */
 	module.exports = function ( classes ) {
 	    this.forEach(function ( element ) {
-	        var oldClass = classes.split( " " ),
-	            elsClass = element.className.split( " " );
+	        // Explicit check for `undefined`
+	        // Using `!classes` would be bad in this case
+	        // Calling `removeClass( "" )` should not wipe the entire className
+	        if ( classes === undefined ) {
+	            element.className = "";
 
-	        oldClass.forEach(function ( klass ) {
-	            if ( elsClass.indexOf( klass ) !== -1 ) {
-	                elsClass.splice( elsClass.indexOf( klass ), 1 );
-	            }
-	        });
+	        } else {
+	            var oldClass = classes.split( " " ),
+	                elsClass = element.className.split( " " );
 
-	        element.className = elsClass.join( " " );
+	            oldClass.forEach(function ( klass ) {
+	                if ( elsClass.indexOf( klass ) !== -1 ) {
+	                    elsClass.splice( elsClass.indexOf( klass ), 1 );
+	                }
+	            });
+
+	            element.className = elsClass.join( " " );
+	        }
 	    });
 
 	    return this;
@@ -1567,18 +1641,24 @@
 	 *              dataType can be `html`, `json`, `jsonp`.
 	 * @param {object} config The ajax config object
 	 *                        url       => string, default: window.location.href
-	 *                        data      => object, default: {}
+	 *                        data      => object, default: null
 	 *                        dataType  => string, default: "html"
 	 *                        method    => string, default: "GET"
 	 *                        jsonp     => string, default: "callback"
+	 *                        headers   => object, default: null
 	 * @returns {Promise}
 	 *
 	 */
 	module.exports = function ( config ) {
-	    var data = utils.serializeData( config.data || {} ),
-	        dataType = config.dataType || "html",
+	    var params = (config.data ? utils.serializeData( config.data ) : null),
+	        dataType = (config.dataType || "html"),
 	        method = (config.method || "get").toUpperCase(),
-	        url = ((config.url || window.location.href) + (data ? "?" + data : ""));
+	        url = (config.url || window.location.href),
+	        headers = (config.headers || null);
+
+	    if ( method === "GET" && params ) {
+	        url += ("?" + params);
+	    }
 
 	    return new Promise(function ( resolve, reject ) {
 	        var handleResponse = function ( response ) {
@@ -1618,6 +1698,14 @@
 
 	            xhr.open( method, url, true );
 
+	            if ( headers ) {
+	                for ( var header in headers ) {
+	                    if ( headers.hasOwnProperty( header ) ) {
+	                        xhr.setRequestHeader( header, headers[ header ] );
+	                    }
+	                }
+	            }
+
 	            xhr.onreadystatechange = function ( e ) {
 	                if ( this.readyState === 4 ) {
 	                    // Two-Hundo's are A-Okay with Hobo
@@ -1630,7 +1718,7 @@
 	                }
 	            };
 
-	            xhr.send();
+	            xhr.send( ((method === "POST" && params) ? params : null) );
 	        }
 	    });
 	};
