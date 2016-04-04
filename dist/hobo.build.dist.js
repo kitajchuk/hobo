@@ -281,7 +281,7 @@
 	 *
 	 *
 	 */
-	var version = "0.3.5",
+	var version = "0.3.6",
 
 
 	    rData = /^data-/,
@@ -876,7 +876,10 @@
 
 /***/ },
 /* 8 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__( 2 );
+
 
 	/**
 	 *
@@ -899,7 +902,7 @@
 	            }
 	        });
 
-	        element.className = elsClass.join( " " );
+	        element.className = utils.trimString( elsClass.join( " " ) );
 	    });
 
 	    return this;
@@ -907,7 +910,10 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__( 2 );
+
 
 	/**
 	 *
@@ -937,7 +943,7 @@
 	                }
 	            });
 
-	            element.className = elsClass.join( " " );
+	            element.className = utils.trimString( elsClass.join( " " ) );
 	        }
 	    });
 
@@ -1104,7 +1110,7 @@
 	    this.forEach(function ( node ) {
 	        var nextNode = node.nextSibling;
 
-	        while ( nextNode.nodeType !== 1 ) {
+	        while ( nextNode && nextNode.nodeType !== 1 ) {
 	            nextNode = nextNode.nextSibling;
 	        }
 
@@ -1141,7 +1147,7 @@
 	    this.forEach(function ( node ) {
 	        var prevNode = node.previousSibling;
 
-	        while ( prevNode.nodeType !== 1 ) {
+	        while ( prevNode && prevNode.nodeType !== 1 ) {
 	            prevNode = nextNode.previousSibling;
 	        }
 
@@ -1164,35 +1170,62 @@
 	 *
 	 * @instance
 	 * @memberof Hobo
+	 * @method addAttr
+	 * @param {element} node The element to set attribute on
+	 * @param {string} key The attribute
+	 * @param {mixed} value The value to set
+	 * @description Get or Set an attribute(s) on a DOM node
+	 * @returns {string}
+	 *
+	 */
+	var addAttr = function ( node, key, value ) {
+	    node.setAttribute( key, value );
+
+	    // Apply data()?
+	    if ( utils.rData.test( key ) ) {
+	        // storeData expects a {data object}
+	        var obj = {};
+
+	        obj[ key.replace( utils.rData, "" ) ] = value;
+
+	        utils.storeData( obj, node );
+	    }
+	};
+
+
+	/**
+	 *
+	 * @instance
+	 * @memberof Hobo
 	 * @method attr
 	 * @param {string} key The attribute
 	 * @param {mixed} value The value to set
-	 * @description Get or Set an attribute on a DOM node
+	 * @description Get or Set an attribute(s) on a DOM node
 	 * @returns {string}
-	 *
-	 * @note This method needs to update data() in case we add data-attr's
 	 *
 	 */
 	module.exports = function ( key, value ) {
+	    var ret = this;
+
+	    // Value can be an {object}
+	    if ( typeof key === "object" ) {
+	        for ( var i in key ) {
+	            this.forEach(function ( node ) {
+	                addAttr( node, i, key[ i ] );
+	            });
+	        }
+
 	    // Value could possibly be "" or 0
-	    if ( value !== undefined ) {
+	    } else if ( value !== undefined ) {
 	        this.forEach(function ( node ) {
-	            node.setAttribute( key, value );
-
-	            // Apply data()?
-	            if ( utils.rData.test( key ) ) {
-	                // storeData expects a {data object}
-	                var obj = {};
-
-	                obj[ key.replace( utils.rData, "" ) ] = value;
-
-	                utils.storeData( obj, node );
-	            }
+	            addAttr( node, key, value );
 	        });
 
 	    } else {
-	        return this[ 0 ].getAttribute( key );
+	        ret = this[ 0 ].getAttribute( key );
 	    }
+
+	    return ret;
 	};
 
 /***/ },
@@ -1650,12 +1683,22 @@
 	 *
 	 */
 	module.exports = function ( config ) {
-	    var params = (config.data ? utils.serializeData( config.data ) : null),
+	    var params = (config.data || null),
 	        dataType = (config.dataType || "html"),
-	        method = (config.method || "get").toUpperCase(),
+	        method = (config.method || "GET").toUpperCase(),
 	        url = (config.url || window.location.href),
 	        headers = (config.headers || null);
 
+	    // Handle params
+	    // Params will be one of the following:
+	    // Serialized querystring
+	    // Instanceof FormData
+	    // Null
+	    if ( params && !(FormData && params instanceof FormData) ) {
+	        params = utils.serializeData( config.data );
+	    }
+
+	    // Handle params in GET URL
 	    if ( method === "GET" && params ) {
 	        url += ("?" + params);
 	    }
@@ -1718,7 +1761,7 @@
 	                }
 	            };
 
-	            xhr.send( ((method === "POST" && params) ? params : null) );
+	            xhr.send( params );
 	        }
 	    });
 	};

@@ -261,7 +261,7 @@
 	 *
 	 *
 	 */
-	var version = "0.3.5",
+	var version = "0.3.6",
 
 
 	    rData = /^data-/,
@@ -856,7 +856,10 @@
 
 /***/ },
 /* 8 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__( 2 );
+
 
 	/**
 	 *
@@ -879,7 +882,7 @@
 	            }
 	        });
 
-	        element.className = elsClass.join( " " );
+	        element.className = utils.trimString( elsClass.join( " " ) );
 	    });
 
 	    return this;
@@ -887,7 +890,10 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__( 2 );
+
 
 	/**
 	 *
@@ -917,7 +923,7 @@
 	                }
 	            });
 
-	            element.className = elsClass.join( " " );
+	            element.className = utils.trimString( elsClass.join( " " ) );
 	        }
 	    });
 
@@ -949,12 +955,22 @@
 	 *
 	 */
 	module.exports = function ( config ) {
-	    var params = (config.data ? utils.serializeData( config.data ) : null),
+	    var params = (config.data || null),
 	        dataType = (config.dataType || "html"),
-	        method = (config.method || "get").toUpperCase(),
+	        method = (config.method || "GET").toUpperCase(),
 	        url = (config.url || window.location.href),
 	        headers = (config.headers || null);
 
+	    // Handle params
+	    // Params will be one of the following:
+	    // Serialized querystring
+	    // Instanceof FormData
+	    // Null
+	    if ( params && !(FormData && params instanceof FormData) ) {
+	        params = utils.serializeData( config.data );
+	    }
+
+	    // Handle params in GET URL
 	    if ( method === "GET" && params ) {
 	        url += ("?" + params);
 	    }
@@ -1017,7 +1033,7 @@
 	                }
 	            };
 
-	            xhr.send( ((method === "POST" && params) ? params : null) );
+	            xhr.send( params );
 	        }
 	    });
 	};
