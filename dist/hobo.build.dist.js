@@ -1037,8 +1037,10 @@
 
 	    } else {
 	        this.forEach(function ( node, i ) {
-	            if ( typeof selector === "function" && selector( i, node ) ) {
-	                keepers.push( node );
+	            if ( typeof selector === "function" ) {
+	                if ( selector( i, node ) ) {
+	                    keepers.push( node );
+	                }
 
 	            } else if ( !matchElement( node, selector ) ) {
 	                keepers.push( node );
