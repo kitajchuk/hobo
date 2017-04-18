@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -134,9 +134,9 @@
 
 	});
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -269,9 +269,9 @@
 	// Export the main Hobo Class :D
 	module.exports = Hobo;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 *
@@ -475,9 +475,9 @@
 	    serializeData: serializeData
 	};
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var matchElement = __webpack_require__( 4 ),
 	    utils = __webpack_require__( 2 );
@@ -580,9 +580,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -642,9 +642,9 @@
 
 	});
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -761,9 +761,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -832,9 +832,9 @@
 	    return ret;
 	};
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    utils = __webpack_require__( 2 );
@@ -874,9 +874,9 @@
 	    return ret;
 	};
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -908,9 +908,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -950,9 +950,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -972,9 +972,9 @@
 	    return (matchElement( this[ 0 ], selector ) ? true : false);
 	};
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 );
 
@@ -998,9 +998,9 @@
 	            : this;
 	};
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var matchElement = __webpack_require__( 4 ),
 	    Hobo = __webpack_require__( 1 );
@@ -1051,9 +1051,9 @@
 	    return keepers;
 	};
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var matchElement = __webpack_require__( 4 ),
 	    utils = __webpack_require__( 2 );
@@ -1087,9 +1087,9 @@
 	    });
 	};
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1124,9 +1124,9 @@
 	    return new Hobo( ret, this._context );
 	};
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1150,7 +1150,7 @@
 	        var prevNode = node.previousSibling;
 
 	        while ( prevNode && prevNode.nodeType !== 1 ) {
-	            prevNode = nextNode.previousSibling;
+	            prevNode = prevNode.previousSibling;
 	        }
 
 	        if ( prevNode && (!selector || (selector && matchElement( prevNode, selector ))) ) {
@@ -1161,9 +1161,10 @@
 	    return new Hobo( ret, this._context );
 	};
 
-/***/ },
+
+/***/ }),
 /* 16 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -1230,9 +1231,9 @@
 	    return ret;
 	};
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 );
 
@@ -1250,9 +1251,9 @@
 	    return new Hobo( this[ (this.length - 1) ], this._context );
 	};
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 );
 
@@ -1270,9 +1271,9 @@
 	    return new Hobo( this[ 0 ], this._context );
 	};
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -1291,9 +1292,9 @@
 	    );
 	};
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1321,9 +1322,9 @@
 	    return new Hobo( parents, null );
 	};
 
-/***/ },
+/***/ }),
 /* 21 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1351,9 +1352,9 @@
 	    return new Hobo( filtered, null );
 	};
 
-/***/ },
+/***/ }),
 /* 22 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -1375,9 +1376,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 23 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 );
 
@@ -1415,9 +1416,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 24 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -1446,9 +1447,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 25 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -1485,9 +1486,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 26 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 );
 
@@ -1527,9 +1528,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 27 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1559,9 +1560,9 @@
 	    return new Hobo( closest, null );
 	};
 
-/***/ },
+/***/ }),
 /* 28 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    utils = __webpack_require__( 2 );
@@ -1594,9 +1595,9 @@
 	    return new Hobo( children, this._context );
 	};
 
-/***/ },
+/***/ }),
 /* 29 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -1625,9 +1626,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 30 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    matchElement = __webpack_require__( 4 );
@@ -1660,9 +1661,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 31 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -1768,5 +1769,5 @@
 	    });
 	};
 
-/***/ }
+/***/ })
 /******/ ]);

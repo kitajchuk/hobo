@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -114,9 +114,9 @@
 
 	});
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -249,9 +249,9 @@
 	// Export the main Hobo Class :D
 	module.exports = Hobo;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*!
 	 *
@@ -455,9 +455,9 @@
 	    serializeData: serializeData
 	};
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var matchElement = __webpack_require__( 4 ),
 	    utils = __webpack_require__( 2 );
@@ -560,9 +560,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*!
 	 *
@@ -622,9 +622,9 @@
 
 	});
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 *
@@ -741,9 +741,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -812,9 +812,9 @@
 	    return ret;
 	};
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Hobo = __webpack_require__( 1 ),
 	    utils = __webpack_require__( 2 );
@@ -854,9 +854,9 @@
 	    return ret;
 	};
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -888,9 +888,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -930,9 +930,9 @@
 	    return this;
 	};
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 2 );
 
@@ -1038,5 +1038,5 @@
 	    });
 	};
 
-/***/ }
+/***/ })
 /******/ ]);

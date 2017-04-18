@@ -6,40 +6,39 @@ hobo.js
 
 
 ## About
-Hobo core is only 6k minified and just 10k minified with all extended methods built in!
+Hobo core is only 7k minified and just 11k minified with all extended methods built in! Gzip and you're doing even better!
 
 
 
 ## Usage
+Install hobo as a package dependency.
 
-### Core
-If you only want to use core you can simply `npm install` and import hobo into your application.
 ```shell
 npm install properjs-hobo --save-dev
 ```
 
-### Custom Builds
-You can create custom hobo builds with any of the available extended methods.
+Import hobo into your app.
 
-#### Clone
-```shell
-git clone git@github.com:ProperJS/hobo.git hobo
-```
-
-#### Build
-```shell
-cd hobo
-
-npm install
-
-# This will include these methods
-npm run build -- "eq not filter detach append"
-```
-
-#### Import
 ```javascript
-import $ from "hobo/dist/hobo.build";
+import $ from "properjs-hobo";
 ```
+
+If you only want to use hobo core then you are done. See the next section for custom builds.
+
+
+
+### Custom Builds
+You can also create custom hobo builds with any of the [available extended methods](#extended). First add a `postinstall` script to your `package.json`. Something like this:
+
+```javascript
+{
+    "scripts": {
+        "postinstall": "cd ./node_modules/properjs-hobo && npm install && npm run build -- 'is eq not attr filter detach remove append'",
+    }
+}
+```
+
+This is the easiest way to manage your custom hobo builds. If you ever want to add or remove a method just add it to the list and rum `npm run postinstall`.
 
 
 
@@ -129,7 +128,7 @@ $.ajax({
     // Object hash to pass to endpoint
     data: {
         foo: "bar",
-        baz: "bot
+        baz: "bot"
     },
 
     // This can be "html", "json" or "jsonp"
