@@ -33,10 +33,11 @@
   "scripts": {
     "start": "npm run watch",
     "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run test'",
+    "server": "./node_modules/.bin/webpack --hide-modules --colors --watch",
     "min": "uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
     "test": "npm run build -- '$npm_package_config_build_all'",
     "build": "node build.js",
-    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && npm run min"
+    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && npm run min && cp ./dist/hobo.build.dist.js ./test/hobo.js"
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"
