@@ -2,14 +2,14 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.3.11",
+  "version": "0.3.13",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
     {
       "name": "Brandon Kitajchuk",
       "email": "kitajchuk@gmail.com",
-      "url": "http://blkpdx.com"
+      "url": "http://kitajchuk.com"
     }
   ],
   "repository": {
@@ -31,14 +31,12 @@
     "build_all": "is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass"
   },
   "scripts": {
-    "doc": "jsdoc lib/ -r -R README.md -P package.json -t node_modules/jsdoc-oblivion/template -c node_modules/jsdoc-oblivion/template/jsdoc.conf.json -d docs",
-    "min": "uglifyjs dist/hobo.build.dist.js -c -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c -m -o dist/hobo.dist.min.js",
-    "test": "npm run build -- '$npm_package_config_build_all'",
-    "posttest": "./node_modules/.bin/webpack test/test.js test/test-dist.js",
-    "build": "node build.js",
-    "postbuild": "./node_modules/.bin/webpack dist/hobo.build.js dist/hobo.build.dist.js && ./node_modules/.bin/webpack hobo.js dist/hobo.dist.js && npm run min && npm run doc",
+    "start": "npm run watch",
     "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run test'",
-    "start": "npm run watch"
+    "min": "uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
+    "test": "npm run build -- '$npm_package_config_build_all'",
+    "build": "node build.js",
+    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && npm run min"
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"
@@ -56,10 +54,11 @@
     "dom"
   ],
   "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "browser-sync-webpack-plugin": "^1.1.4",
     "chokidar-cli": "^1.0.1",
-    "jsdoc": "^3.4.0",
-    "jsdoc-oblivion": "0.0.4",
+    "expose-loader": "^0.7.3",
     "uglifyjs": "^2.4.10",
-    "webpack": "^1.13.0"
+    "webpack": "^2.4.1"
   }
 }
