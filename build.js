@@ -7,9 +7,6 @@ var child_process = require( "child_process" );
 var Build = function ( modules ) {
     if ( !modules.length ) {
         console.log( "> [Hobo]", "Specify modules to custom build or just use hobo core." );
-        child_process.exec( "rm -rf dist/hobo-ext.js", [], function ( error, stout, sterr ) {});
-        child_process.exec( "rm -rf dist/hobo-ext.min.js", [], function ( error, stout, sterr ) {});
-        child_process.exec( "rm -rf build", [], function ( error, stout, sterr ) {});
         process.exit( 0 );
     }
 

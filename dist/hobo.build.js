@@ -1,8 +1,8 @@
 /*!
  *
  *
- * @method hobo
- * @author kitajchuk
+ * Hobo
+ * A very small, modular DOM utility for modern web apps.
  * @hobo-dist npm run build -- is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass
  *
  * @links
@@ -68,11 +68,13 @@
 
     /**
      *
+     * @global
      * @public
      * @method hobo
      * @description Wrapper for `Hobo` instances.
      * @param {string} selector The parameter passed to `querySelectorAll`
      * @param {element} context The Element used to call `querySelectorAll`
+     * @returns {Hobo}
      *
      */
     hobo = function ( selector, context ) {

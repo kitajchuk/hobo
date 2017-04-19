@@ -70,15 +70,14 @@
 /* 0 */
 /***/ (function(module, exports) {
 
-/*!
- *
- *
- * @Hobo-utils
- * @author: kitajchuk
- *
- *
- */
-var version = "0.3.6",
+/**
+*
+* @public
+* @namespace utils
+* @description Internal utility methods for {Hobo}
+*
+*/
+var version = "0.3.13",
 
 
     rData = /^data-/,
@@ -102,28 +101,76 @@ var version = "0.3.6",
     rFront2Back = /^\s+|\s+$/g,
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method trimString
+     * @description Trim leading and trailing whitespace
+     * @param {string} str The string to trim
+     * @returns {string}
+     *
+     */
     trimString = function ( str ) {
         return str.replace( rFront2Back, "" );
     },
 
 
-    camelCase = function ( string ) {
-        return string.replace( rDashAlpha, function ( all, letter ) {
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method camelCase
+     * @description Camel case a string
+     * @param {string} str The string to camel case
+     * @returns {string}
+     *
+     */
+    camelCase = function ( str ) {
+        return str.replace( rDashAlpha, function ( all, letter ) {
             return letter.toUpperCase();
         });
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method makeId
+     * @description Make a unique hobo ID string
+     * @returns {string}
+     *
+     */
     makeId = function () {
         return ("hobo" + ( version + Math.random() ).replace( rDigit, "" ));
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method makeArray
+     * @description Convert elements to a native Array
+     * @param {elements} nodes The nodes to make into an array
+     * @returns {array}
+     *
+     */
     makeArray = function ( nodes ) {
         return [].slice.call( nodes );
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method makeData
+     * @description Establish the hoboDataMap for a node
+     * @param {element} node The node to map data on
+     *
+     */
     makeData = function ( node ) {
         if ( !node.hoboDataMap ) {
             node.hoboDataMap = {};
@@ -138,6 +185,16 @@ var version = "0.3.6",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method storeData
+     * @description Store data in the hoboDataMap
+     * @param {object} data The data to store
+     * @param {element} node The node to store data with
+     *
+     */
     storeData = function ( data, node ) {
         var id,
             i;
@@ -152,6 +209,16 @@ var version = "0.3.6",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method mergeData
+     * @description Merge
+     * @param {object} data The data to mutate
+     * @param {element} node The node to pull data from
+     *
+     */
     mergeData = function ( data, node ) {
         for ( var i in node.hoboDataMap ) {
             if ( node.hoboDataMap.hasOwnProperty( i ) && !data[ i ] ) {
@@ -161,6 +228,17 @@ var version = "0.3.6",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method retrieveData
+     * @description Get data from a node
+     * @param {string} key The reference point for a data entry
+     * @param {element} node The node to pull a data value from
+     * @returns {mixed}
+     *
+     */
     retrieveData = function ( key, node ) {
         var ret = null;
 
@@ -175,6 +253,16 @@ var version = "0.3.6",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method removeData
+     * @description Delete data from a nodes hoboDataMap
+     * @param {string} key The reference point for a data entry
+     * @param {element} node The node to delete a data value from
+     *
+     */
     removeData = function ( key, node ) {
         // All data mapped into Hobo will be camel-cased
         key = camelCase( key );
@@ -185,6 +273,17 @@ var version = "0.3.6",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method serializeData
+     * @description Convert data into AJAXable querystring
+     * @param {object} data The data to convert
+     * @param {string} prefix The current iterations property name
+     * @returns {string}
+     *
+     */
     serializeData = function ( data, prefix ) {
         var str = [],
             key,
@@ -214,6 +313,16 @@ var version = "0.3.6",
     // Data mapped through Hobo must camel-case as well.
 
 
+    /**
+     *
+     * @private
+     * @memberof utils
+     * @method _getDataValue
+     * @description Normalized parsing of JSON string into Object
+     * @param {object} data The data to parse
+     * @returns {object}
+     *
+     */
     _getDataValue = function ( data ) {
         if ( rJson.test( data ) ) {
             try {
@@ -228,7 +337,15 @@ var version = "0.3.6",
     },
 
 
-    // Use {NamedNodeMap}
+    /**
+     *
+     * @private
+     * @memberof utils
+     * @method _mapAttributes
+     * @description Migrate existing NamedNodeMap to a nodes hoboDataMap
+     * @param {element} node The data to parse
+     *
+     */
     _mapAttributes = function ( node ) {
         var i = node.attributes.length;
 
@@ -242,7 +359,15 @@ var version = "0.3.6",
     },
 
 
-    // Use {DOMStringMap}
+    /**
+     *
+     * @private
+     * @memberof utils
+     * @method _mapDataset
+     * @description Migrate existing DOMStringMap to a nodes hoboDataMap
+     * @param {element} node The data to parse
+     *
+     */
     _mapDataset = function ( node ) {
         for ( var i in node.dataset ) {
             if ( node.dataset.hasOwnProperty( i ) ) {
@@ -272,18 +397,11 @@ module.exports = {
     serializeData: serializeData
 };
 
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/*!
- *
- * 
- * @Hobo
- * @author: kitajchuk
- *
- *
- */
 var utils = __webpack_require__( 0 ),
     array = [];
 
@@ -291,6 +409,7 @@ var utils = __webpack_require__( 0 ),
 /**
  *
  * @class Hobo
+ * @constructor
  * @classdesc A very small, modular DOM utility for modern web apps.
  * @param {string} selector The goods - String, Element, Collection.
  * @param {element} context The Element used to call `querySelectorAll`
@@ -370,13 +489,24 @@ Hobo.prototype.splice = array.splice;
 /**
  *
  * @instance
- * @method forEach
+ * @method each
  * @param {function} callback The method called on each iteration
  * @memberof Hobo
  * @description Make sure Hobo is iterable like an Array
  *
  */
 Hobo.prototype.each = array.forEach;
+
+
+/**
+ *
+ * @instance
+ * @method forEach
+ * @param {function} callback The method called on each iteration
+ * @memberof Hobo
+ * @description Make sure Hobo is iterable like an Array
+ *
+ */
 Hobo.prototype.forEach = array.forEach;
 
 
@@ -406,6 +536,7 @@ Hobo.prototype.map = array.map;
 
 // Export the main Hobo Class :D
 module.exports = Hobo;
+
 
 /***/ }),
 /* 2 */
@@ -1024,8 +1155,8 @@ module.exports = function ( classes ) {
 /*!
  *
  *
- * @method hobo
- * @author kitajchuk
+ * Hobo
+ * A very small, modular DOM utility for modern web apps.
  * @hobo-dist npm run build -- is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass
  *
  * @links
@@ -1091,11 +1222,13 @@ module.exports = function ( classes ) {
 
     /**
      *
+     * @global
      * @public
      * @method hobo
      * @description Wrapper for `Hobo` instances.
      * @param {string} selector The parameter passed to `querySelectorAll`
      * @param {element} context The Element used to call `querySelectorAll`
+     * @returns {Hobo}
      *
      */
     hobo = function ( selector, context ) {
@@ -1732,6 +1865,7 @@ var utils = __webpack_require__( 0 );
  * @instance
  * @memberof Hobo
  * @method removeAttr
+ * @param {string} attr The attribute to remove
  * @description Remove the specified attribute from each node in the set.
  * @returns {Hobo}
  *
@@ -1750,6 +1884,7 @@ module.exports = function ( attr ) {
 
     return this;
 };
+
 
 /***/ }),
 /* 32 */

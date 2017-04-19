@@ -17,6 +17,8 @@ module.exports = {
             port: 3000,
             server: {
                 baseDir: ["test"]
+                //baseDir: ["docs"],
+                //directory: true
             }
         })
     ],
