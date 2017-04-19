@@ -77,7 +77,7 @@
 * @description Internal utility methods for {Hobo}
 *
 */
-var version = "0.3.13",
+var version = "0.3.14",
 
 
     rData = /^data-/,

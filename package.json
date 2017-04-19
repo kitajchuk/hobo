@@ -36,8 +36,8 @@
     "server": "./node_modules/.bin/webpack --hide-modules --colors --watch",
     "min": "uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
     "test": "npm run build -- '$npm_package_config_build_all'",
-    "build": "node build.js",
-    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && npm run doc && npm run min && cp ./dist/hobo.build.dist.js ./test/hobo.js",
+    "build": "rm -rf dist/* && node build.js",
+    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && rm -rf docs/* && npm run doc && npm run min && cp ./dist/hobo.build.dist.js ./test/hobo.js",
     "doc": "jsdoc dist/hobo.build.dist.js -R README.md -P package.json -t node_modules/jsdoc-oblivion/template -c node_modules/jsdoc-oblivion/template/jsdoc.conf.json -d docs"
   },
   "dependencies": {
