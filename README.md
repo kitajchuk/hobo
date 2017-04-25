@@ -11,7 +11,7 @@ Hobo core is only 7k minified and just 11k minified with all extended methods bu
 
 
 ## Docs
-View the [jsdocs for hobo](http://properjs.github.io/hobo/properjs-hobo/0.3.14/index.html).
+View the [jsdocs for hobo](http://properjs.github.io/hobo/properjs-hobo/0.3.15/index.html).
 
 
 

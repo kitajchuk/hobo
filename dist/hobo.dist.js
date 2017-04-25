@@ -77,7 +77,7 @@
 * @description Internal utility methods for {Hobo}
 *
 */
-var version = "0.3.14",
+var version = "0.3.15",
 
 
     rData = /^data-/,
@@ -308,6 +308,36 @@ var version = "0.3.14",
     },
 
 
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method getClass
+     * @description Get the class string from a node
+     * @param {Element} node The node to get `class` for
+     * @returns {string}
+     *
+     */
+    getClass = function ( node ) {
+        return (node.getAttribute( "class" ) || "");
+    },
+
+
+    /**
+     *
+     * @public
+     * @memberof utils
+     * @method setClass
+     * @description Set the class string for a node
+     * @param {Element} node The node to set `class` on
+     * @param {string} klass The class string to be applied
+     *
+     */
+    setClass = function ( node, klass ) {
+        node.setAttribute( "class", klass );
+    },
+
+
     // DOMStringMap camel-cases data- attributes.
     // NamedNodeMap is a fallback which supports IE 10.
     // Data mapped through Hobo must camel-case as well.
@@ -394,7 +424,9 @@ module.exports = {
     retrieveData: retrieveData,
     mergeData: mergeData,
     removeData: removeData,
-    serializeData: serializeData
+    serializeData: serializeData,
+    getClass: getClass,
+    setClass: setClass
 };
 
 
@@ -647,7 +679,7 @@ var utils = __webpack_require__( 0 );
 module.exports = function ( classes ) {
     this.forEach(function ( element ) {
         var newClass = classes.split( " " ),
-            elsClass = element.className.split( " " );
+            elsClass = utils.getClass( element ).split( " " );
 
         newClass.forEach(function ( klass ) {
             if ( elsClass.indexOf( klass ) === -1 ) {
@@ -655,11 +687,12 @@ module.exports = function ( classes ) {
             }
         });
 
-        element.className = utils.trimString( elsClass.join( " " ) );
+        utils.setClass( element, utils.trimString( elsClass.join( " " ) ) );
     });
 
     return this;
 };
+
 
 /***/ }),
 /* 5 */
@@ -1129,11 +1162,11 @@ module.exports = function ( classes ) {
         // Using `!classes` would be bad in this case
         // Calling `removeClass( "" )` should not wipe the entire className
         if ( classes === undefined ) {
-            element.className = "";
+            utils.setClass( element, "" );
 
         } else {
             var oldClass = classes.split( " " ),
-                elsClass = element.className.split( " " );
+                elsClass = utils.getClass( element ).split( " " );
 
             oldClass.forEach(function ( klass ) {
                 if ( elsClass.indexOf( klass ) !== -1 ) {
@@ -1141,12 +1174,13 @@ module.exports = function ( classes ) {
                 }
             });
 
-            element.className = utils.trimString( elsClass.join( " " ) );
+            utils.setClass( element, utils.trimString( elsClass.join( " " ) ) );
         }
     });
 
     return this;
 };
+
 
 /***/ }),
 /* 11 */,
