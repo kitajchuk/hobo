@@ -2,7 +2,7 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
@@ -34,7 +34,7 @@
     "start": "npm run watch",
     "watch": "chokidar 'hobo.js' 'lib/**/*.js' 'test/test.js' --initial -d 10 -c 'npm run test'",
     "server": "./node_modules/.bin/webpack --hide-modules --colors --watch",
-    "min": "uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
+    "min": "./node_modules/.bin/uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
     "test": "npm run build -- '$npm_package_config_build_all'",
     "build": "rm -rf dist/* && node build.js",
     "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && rm -rf docs/* && npm run doc && npm run min && cp ./dist/hobo.build.dist.js ./test/hobo.js",
