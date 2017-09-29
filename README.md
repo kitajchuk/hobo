@@ -148,6 +148,11 @@ $.ajax({
     // This is for passing headers
     headers: {
         "Content-Type": "application/x-www-form-urlencoded"
+    },
+
+    // This is for application/json payloads
+    payload: {
+        sayWhat: "I'm sending JSON"
     }
 
 }).then(function ( response ) {
