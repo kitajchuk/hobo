@@ -93,7 +93,7 @@
 
 
 
-    <h3>properjs-hobo 0.3.17</h3>
+    <h3>properjs-hobo 0.3.18</h3>
 
 
 
@@ -221,6 +221,11 @@ $.ajax({
     // This is for passing headers
     headers: {
         &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;
+    },
+
+    // This is for application/json payloads
+    payload: {
+        sayWhat: &quot;I'm sending JSON&quot;
     }
 
 }).then(function ( response ) {
