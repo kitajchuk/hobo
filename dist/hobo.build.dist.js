@@ -68,12 +68,13 @@
 /***/ (function(module, exports) {
 
 /**
-*
-* @public
-* @namespace utils
-* @description Internal utility methods for {Hobo}
-*
-*/
+ *
+ * @static
+ * @memberof Hobo
+ * @member utils
+ * @description Utility methods used internally by Hobo
+ *
+ */
 var version = "0.3.15",
 
 
@@ -1283,6 +1284,9 @@ module.exports = function ( config ) {
 
     // Attach Hobo utilities to `wrapper` method
     hobo.ajax = __webpack_require__( 10 );
+
+    // Attach Hobo internal utils to `wrapper` method
+    hobo.utils = utils;
 
 
     return hobo;
