@@ -368,7 +368,12 @@ var version = "0.3.15",
                 key = prefix ? (prefix + "[" + i + "]") : i;
                 val = data[ i ];
 
-                if ( typeof val === "object" ) {
+                if ( Array.isArray( val ) ) {
+                    val.forEach(( v ) => {
+                        str.push( (encodeURIComponent( key ) + "[]" + "=" + encodeURIComponent( v )) );
+                    });
+
+                } else if ( typeof val === "object" ) {
                     str.push( serializeData( val, key ) );
 
                 } else {

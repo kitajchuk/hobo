@@ -2,7 +2,7 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
