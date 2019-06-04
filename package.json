@@ -2,14 +2,14 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.3.23",
+  "version": "0.3.24",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
     {
       "name": "Brandon Kitajchuk",
       "email": "bk@kitajchuk.com",
-      "url": "http://kitajchuk.com"
+      "url": "https://kitajchuk.com"
     }
   ],
   "repository": {
