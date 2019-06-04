@@ -2,7 +2,7 @@
   "title": "hobo",
   "name": "properjs-hobo",
   "description": "A very small, modular DOM utility for modern web apps.",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "homepage": "https://github.com/ProperJS/hobo",
   "readmeFilename": "README.md",
   "contributors": [
@@ -31,10 +31,9 @@
     "build_all": "is eq not one next prev attr last first index parent filter detach append remove trigger prepend closest children removeAttr toggleClass"
   },
   "scripts": {
-    "min": "./node_modules/.bin/uglifyjs dist/hobo.build.dist.js -c warnings=false -m -o dist/hobo.build.dist.min.js && uglifyjs dist/hobo.dist.js -c warnings=false -m -o dist/hobo.dist.min.js",
     "test": "npm run build -- '$npm_package_config_build_all' && cp ./dist/hobo.build.dist.js ./test/hobo.js",
     "build": "rm -rf dist/* && node build.js",
-    "postbuild": "./node_modules/.bin/webpack --progress --profile --display-modules --colors && npm run min"
+    "postbuild": "./node_modules/.bin/webpack --env.production --progress --profile --display-modules --colors -p"
   },
   "dependencies": {
     "properjs-matchelement": "^0.3.0"
@@ -55,10 +54,8 @@
     "hobo"
   ],
   "devDependencies": {
-    "browser-sync": "^2.18.8",
-    "browser-sync-webpack-plugin": "^1.1.4",
-    "expose-loader": "^0.7.3",
-    "uglifyjs": "^2.4.10",
-    "webpack": "^3.5.6"
+    "expose-loader": "^0.7.5",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.4"
   }
 }

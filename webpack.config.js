@@ -6,7 +6,10 @@ const webpack = require( "webpack" );
 
 
 module.exports = {
-    // devtool: "source-map",
+    mode: "none",
+
+
+    devtool: "source-map",
 
 
     plugins: [],
